@@ -1,0 +1,103 @@
+{% extends "index.html" %}
+
+{% block title %}Top Up Electricity{% endblock %}
+
+{% block content %}
+
+<div class="max-w-5xl mx-auto">
+
+    <div class="mb-8">
+        <h1 class="text-3xl font-bold">Electricity Top-Up</h1>
+        <p class="text-gray-600 mt-2">
+            Recharge your room electricity balance instantly.
+        </p>
+    </div>
+
+    <div class="bg-white rounded-xl shadow p-6">
+
+        <form method="POST">
+
+            {{ form.hidden_tag() }}
+
+            {{ form.room.label }}
+            {{ form.room(class="w-full border rounded-lg p-3") }}
+
+            {% for error in form.room.errors %}
+                <p class="text-red-500">{{ error }}</p>
+            {% endfor %}
+            
+
+             {{ form.amount.label }}
+            {{ form.amount( id="amount-input" , class="w-full border rounded-lg p-3") }}
+
+            {% for error in form.amount.errors %}
+                <p class="text-red-500">{{ error }}</p>
+            {% endfor %}
+
+            <div class="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
+
+                {% for a in amounts %}
+                
+                    <button
+                    id="amount-btn-{{a}}"
+                    type="button"
+                    onclick="setAmount({{ a }})"
+                    class="amount-btn border rounded-lg p-4"
+                    >
+                    ${{ a }}
+                </button>
+                {% endfor %}
+            </div>
+            
+      
+            
+           
+
+            {{ form.submit(class="bg-blue-600 text-white px-6 py-3 rounded-lg") }}
+
+        </form>
+
+    </div>
+
+    <div class="mt-6">
+        <a
+            href="/topup/history"
+            class="text-blue-600 hover:underline"
+        >
+            View Recharge History →
+        </a>
+    </div>
+
+</div>
+<script>
+    function setAmount(value) {
+        document.getElementById("amount-input").value = value;
+        document.getElementById("amount-input").dispatchEvent(new Event("input"));
+
+
+    }
+
+   document.getElementById('amount-input').addEventListener('input', (event) => {
+
+    const amountBtns = document.getElementsByClassName("amount-btn");
+    const inputValue = event.target.value;
+
+    // Remove highlight from all buttons
+    for (let i = 0; i < amountBtns.length; i++) {
+        amountBtns[i].classList.remove("bg-blue-500", "text-white");
+    }
+
+    // Highlight button if it exists
+    const btn = document.getElementById(`amount-btn-${inputValue}`);
+    if (btn) {
+        btn.classList.add("bg-blue-500", "text-white");
+    }
+});
+
+    
+
+
+
+</script>
+
+{% endblock %}

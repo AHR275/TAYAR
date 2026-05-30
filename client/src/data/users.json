@@ -1,0 +1,44 @@
+{
+     "users": [
+    {
+      "id": 1,
+      "name": "Ahmed Hassan",
+      "email": "ahmed@example.com",
+      "phone": "+966500000001",
+      "role": "student",
+      "room_id": 204
+    },
+    {
+      "id": 2,
+      "name": "Sarah Johnson",
+      "email": "sarah@example.com",
+      "phone": "+966500000002",
+      "role": "student",
+      "room_id": 204
+    },
+    {
+      "id": 3,
+      "name": "Mohammed Ali",
+      "email": "mohammed@example.com",
+      "phone": "+966500000003",
+      "role": "student",
+      "room_id": 107
+    },
+    {
+      "id": 4,
+      "name": "Emily Davis",
+      "email": "emily@example.com",
+      "phone": "+966500000004",
+      "role": "student",
+      "room_id": 210
+    },
+    {
+      "id": 5,
+      "name": "Admin User",
+      "email": "admin@example.com",
+      "phone": "+966500000005",
+      "role": "admin",
+      "room_id": null
+    }
+  ]
+}

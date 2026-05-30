@@ -1,0 +1,53 @@
+{% extends "index.html" %}
+
+{% block title %}Top Up Electricity{% endblock %}
+
+{% block content %}
+
+<tbody>
+
+{% for transaction in transactions %}
+
+<tr class="border-t">
+
+    <td class="p-4">
+        #{{ transaction.id }}
+    </td>
+
+    <td class="p-4">
+        {{ transaction.room }}
+    </td>
+
+    <td class="p-4">
+        ${{ transaction.amount }}
+    </td>
+
+    <td class="p-4">
+        {{ transaction.date }}
+    </td>
+
+    <td class="p-4">
+
+        {% if transaction.status == "Success" %}
+
+        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
+            {{ transaction.status }}
+        </span>
+
+        {% else %}
+
+        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
+            {{ transaction.status }}
+        </span>
+
+        {% endif %}
+
+    </td>
+
+</tr>
+
+{% endfor %}
+
+</tbody>
+
+{% endblock %}

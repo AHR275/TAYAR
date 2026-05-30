@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <title>{% block title %}Tayar{% endblock %}</title>
+</head>
+
+<body class="bg-gray-100">
+
+    <!-- Navbar -->
+    <nav class="bg-blue-600 text-white p-4">
+        <div class="container mx-auto flex justify-between">
+            <h1 class="text-xl font-bold">Tayar</h1>
+
+            <div class="space-x-4">
+                <a href="/">Home</a>
+                <a href="/dashboard">Dashboard</a>
+                <a href="/topup">Top Up</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Page Content -->
+    <main class="container mx-auto p-6">
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white text-center p-4 mt-10">
+        Smart Electricity Top-Up System
+    </footer>
+
+</body>
+</html>

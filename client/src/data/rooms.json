@@ -1,0 +1,63 @@
+{
+  "buildings": [
+    {
+      "id": 1,
+      "name": "Building A",
+      "floors": 4,
+      "rooms": [
+        {
+          "id": 101,
+          "room_number": "A-101",
+          "capacity": 2,
+          "electricity_balance": 45.75
+        },
+        {
+          "id": 204,
+          "room_number": "A-204",
+          "capacity": 4,
+          "electricity_balance": 12.50
+        },
+        {
+          "id": 305,
+          "room_number": "A-305",
+          "capacity": 3,
+          "electricity_balance": 78.00
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Building B",
+      "floors": 3,
+      "rooms": [
+        {
+          "id": 107,
+          "room_number": "B-107",
+          "capacity": 2,
+          "electricity_balance": 20.00
+        },
+        {
+          "id": 210,
+          "room_number": "B-210",
+          "capacity": 4,
+          "electricity_balance": 33.25
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Building C",
+      "floors": 5,
+      "rooms": [
+        {
+          "id": 301,
+          "room_number": "C-301",
+          "capacity": 1,
+          "electricity_balance": 5.50
+        }
+      ]
+    }
+  ]
+
+  
+}

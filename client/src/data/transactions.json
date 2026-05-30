@@ -1,0 +1,51 @@
+{
+   
+
+  "transactions": [
+    {
+      "id": "TX1001",
+      "user_id": 1,
+      "room_id": 204,
+      "amount": 20,
+      "type": "topup",
+      "status": "success",
+      "created_at": "2026-05-29T10:30:00"
+    },
+    {
+      "id": "TX1002",
+      "user_id": 2,
+      "room_id": 204,
+      "amount": 50,
+      "type": "topup",
+      "status": "success",
+      "created_at": "2026-05-28T14:15:00"
+    },
+    {
+      "id": "TX1003",
+      "user_id": 3,
+      "room_id": 107,
+      "amount": 10,
+      "type": "topup",
+      "status": "pending",
+      "created_at": "2026-05-27T09:40:00"
+    },
+    {
+      "id": "TX1004",
+      "user_id": 4,
+      "room_id": 210,
+      "amount": 75,
+      "type": "topup",
+      "status": "success",
+      "created_at": "2026-05-25T18:20:00"
+    },
+    {
+      "id": "TX1005",
+      "user_id": 1,
+      "room_id": 204,
+      "amount": 30,
+      "type": "topup",
+      "status": "success",
+      "created_at": "2026-05-20T11:10:00"
+    }
+  ]
+}
