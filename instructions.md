@@ -105,6 +105,36 @@ templates/topup.html
 
 ---
 
+
+# Member 2 — Team Leader
+
+### Files
+
+
+routes/homepage.py
+
+
+templates/homepage.html
+
+
+
+### Responsibilities
+
+#### Project Leadership
+
+
+* Navbar & Footer
+
+
+#### Homepage Module
+
+* Hero Section
+* Features Section
+* Announcements
+* Landing Page UI
+* Responsive Homepage
+
+
 # Member 4 — Payment Module
 
 ### Files
