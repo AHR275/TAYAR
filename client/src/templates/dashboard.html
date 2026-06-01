@@ -5,19 +5,79 @@ Dashboard
 {% endblock %}
 
 {% block content %}
+{% extends "base.html" %}
 
-<div class="grid grid-cols-3 gap-6">
+{% block content %}
 
-    <div class="bg-white p-6 rounded-2xl shadow">
-        <h2 class="text-lg font-bold">Current Balance</h2>
-        <p class="text-3xl mt-4">$120</p>
+<div class="container mx-auto p-6">
+
+    <h1 class="text-3xl font-bold mb-6">
+        Welcome {{ user.name }}
+    </h1>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+
+        <div class="bg-white p-5 rounded-lg shadow">
+            <h2 class="text-gray-500">Room</h2>
+            <p class="text-2xl font-bold">
+                {{ room.room_number }}
+            </p>
+        </div>
+
+        <div class="bg-white p-5 rounded-lg shadow">
+            <h2 class="text-gray-500">Electricity Balance</h2>
+            <p class="text-2xl font-bold text-green-600">
+                {{ room.electricity_balance }}
+            </p>
+        </div>
+
+        <div class="bg-white p-5 rounded-lg shadow">
+            <h2 class="text-gray-500">Status</h2>
+
+            {% if room.electricity_balance > 20 %}
+                <p class="text-green-600 font-bold">Active</p>
+            {% else %}
+                <p class="text-red-600 font-bold">Low Balance</p>
+            {% endif %}
+        </div>
+
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow">
-        <h2 class="text-lg font-bold">Room Number</h2>
-        <p class="text-3xl mt-4">A-204</p>
+    <div class="mt-8 bg-white rounded-lg shadow p-5">
+
+        <h2 class="text-xl font-bold mb-4">
+            Recent Transactions
+        </h2>
+
+        <table class="w-full">
+
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Amount</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                </tr>
+            </thead>
+
+            <tbody>
+
+                {% for tx in transactions %}
+                <tr>
+                    <td>{{ tx.id }}</td>
+                    <td>{{ tx.amount }}</td>
+                    <td>{{ tx.status }}</td>
+                    <td>{{ tx.created_at }}</td>
+                </tr>
+                {% endfor %}
+
+            </tbody>
+
+        </table>
+
     </div>
 
 </div>
 
+{% endblock %}
 {% endblock %}
