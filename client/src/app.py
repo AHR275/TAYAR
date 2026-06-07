@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from src.routes.topup import topup_bp
 from src.routes.homepage import home_bp
+from src.routes.paymment import payment_bp
 
 
 app = Flask(__name__)
@@ -13,5 +14,6 @@ def dashboard():
 
 app.register_blueprint(topup_bp)
 app.register_blueprint(home_bp)
+app.register_blueprint(payment_bp)
 
 

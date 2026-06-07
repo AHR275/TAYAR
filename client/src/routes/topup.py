@@ -46,11 +46,10 @@ class TopupView(MethodView):
             amount = form.amount.data
            
             
+            print("go to payment ")
+            print(url_for("payment.payment", room=room, amount=amount))  # 🔍 تأكد من الرابط
+            return redirect(url_for("payment.payment", room=room, amount=amount))
 
-            return redirect(
-
-                url_for("topup.history")
-            )
 
         return render_template(
             "topup.html",
