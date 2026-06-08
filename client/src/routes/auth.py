@@ -3,7 +3,8 @@ from flask import (
     render_template,
     flash,
     redirect,
-    url_for
+    url_for,
+    session
 )
 from flask.views import MethodView
 from werkzeug.security import check_password_hash
@@ -14,63 +15,45 @@ from src.forms.auth_forms import (
     ForgotPasswordForm
 )
 
-from src.models import User
+from src.models import User, Room
 
 
 auth_bp = Blueprint("auth", __name__)
 
-
-# ============================================
-# Login
-# ============================================
 class LoginView(MethodView):
 
     def get(self):
         form = LoginForm()
-        return render_template(
-            "login.html",
-            form=form
-        )
+        return render_template("login.html", form=form)
 
     def post(self):
         form = LoginForm()
 
         if form.validate_on_submit():
 
-            email = form.email.data
+            identifier = form.email.data  # (this can be email OR username)
             password = form.password.data
 
-            user = User.get_by_email(email)
+            # try email first
+            user = User.get_by_email(identifier)
 
-            if (
-                user
-                and check_password_hash(
-                    user.password,
-                    password
-                )
-            ):
-                flash(
-                    "Login successful!",
-                    "success"
-                )
+            # if not found, try username
+            if not user:
+                user = User.get_by_username(identifier)
 
-                return redirect(
-                    url_for(
-                        "dashboard.dashboard"
-                    )
-                )
+            if user and check_password_hash(user.password, password):
 
-            flash(
-                "Invalid email or password",
-                "danger"
-            )
+                session["user_id"] = user.id
+                session["username"] = user.username
+                session["email"] = user.email
+                session["is_admin"] = user.is_admin
 
-        return render_template(
-            "login.html",
-            form=form
-        )
+                flash("Login successful!", "success")
+                return redirect(url_for("dashboard.dashboard"))
 
+            flash("Invalid username/email or password", "danger")
 
+        return render_template("login.html", form=form)
 # ============================================
 # Register
 # ============================================
@@ -78,69 +61,39 @@ class RegisterView(MethodView):
 
     def get(self):
         form = RegisterForm()
-
-        return render_template(
-            "register.html",
-            form=form
-        )
+        return render_template("register.html", form=form)
 
     def post(self):
         form = RegisterForm()
 
         if form.validate_on_submit():
 
-            existing_email = User.get_by_email(
-                form.email.data
-            )
+            # check email already exists
+            if User.get_by_email(form.email.data):
+                flash("Email already exists", "danger")
+                return render_template("register.html", form=form)
 
-            if existing_email:
-                flash(
-                    "Email already exists",
-                    "danger"
-                )
+            # check username already exists
+            if User.get_by_username(form.username.data):
+                flash("Username already exists", "danger")
+                return render_template("register.html", form=form)
 
-                return render_template(
-                    "register.html",
-                    form=form
-                )
+            room_data = Room.get_by_room_number(form.room_number.data)
 
-            existing_username = (
-                User.get_by_username(
-                    form.username.data
-                )
-            )
-
-            if existing_username:
-                flash(
-                    "Username already exists",
-                    "danger"
-                )
-
-                return render_template(
-                    "register.html",
-                    form=form
-                )
-
+            room_id = list(room_data.values())[0]["id"]
+            print (room_id) 
+            # create user
             User.create(
                 username=form.username.data,
                 email=form.email.data,
-                password=form.password.data
+                password=form.password.data,
+                room_id=int(room_id) 
             )
 
-            flash(
-                "Account created successfully!",
-                "success"
-            )
+            flash("Account created successfully!", "success")
+            return redirect(url_for("auth.login"))
 
-            return redirect(
-                url_for("auth.login")
-            )
-
-        return render_template(
-            "register.html",
-            form=form
-        )
-
+        return render_template("register.html", form=form)
 
 # ============================================
 # Forgot Password

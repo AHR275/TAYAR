@@ -5,15 +5,12 @@ from src.middleware.db import db , create_database
 
 
 from src.routes.topup import topup_bp
-<<<<<<< HEAD
-from src.routes.auth import auth_bp
-=======
 from src.routes.homepage import home_bp
 from src.routes.paymment import payment_bp
 from src.routes.dashboard import dashboard_bp 
+from src.routes.auth import auth_bp
 # from src.routes.analyze import analyze_bp
 
->>>>>>> ahmed
 
 app = Flask(__name__)
 app.config.update(CONFIG)
