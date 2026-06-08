@@ -7,6 +7,7 @@ from src.middleware.db import db , create_database
 from src.routes.topup import topup_bp
 from src.routes.homepage import home_bp
 from src.routes.paymment import payment_bp
+from src.routes.dashboard import dashboard_bp 
 # from src.routes.analyze import analyze_bp
 
 
@@ -25,14 +26,15 @@ with app.app_context():
 
 
 
-@app.route("/dashboard")
-def dashboard():
-    return render_template("dashboard.html")
+# @app.route("/dashboard")
+# def dashboard():
+#     return render_template("dashboard.html")
 
 app.register_blueprint(topup_bp)
 
 app.register_blueprint(home_bp)
 app.register_blueprint(payment_bp)
+app.register_blueprint(dashboard_bp)
 
 # app.register_blueprint(analyze_bp)
 
