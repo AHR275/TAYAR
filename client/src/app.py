@@ -5,6 +5,7 @@ from src.middleware.db import db
 
 from src.routes.topup import topup_bp
 from src.routes.homepage import home_bp
+from src.routes.paymment import payment_bp
 # from src.routes.analyze import analyze_bp
 
 
@@ -21,6 +22,7 @@ def dashboard():
 app.register_blueprint(topup_bp)
 
 app.register_blueprint(home_bp)
+app.register_blueprint(payment_bp)
 
 # app.register_blueprint(analyze_bp)
 

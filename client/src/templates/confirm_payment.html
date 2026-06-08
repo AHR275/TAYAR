@@ -1,0 +1,56 @@
+{% extends "index.html" %}
+
+{% block content %}
+<div class="min-h-screen bg-gray-100 py-12">
+    <div class="container mx-auto px-4 max-w-md">
+        <div class="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <!-- Header -->
+            <div class="bg-blue-600 text-white text-center py-6">
+                <div class="text-5xl mb-3">📱</div>
+                <h1 class="text-2xl font-bold">Confirm Payment</h1>
+                <p class="text-blue-100 mt-1">Review details before paying</p>
+            </div>
+            
+            <!-- Payment Details -->
+            <div class="p-6">
+                <div class="bg-gray-50 rounded-xl p-4 mb-6">
+                    <div class="space-y-3">
+                        <div class="flex justify-between">
+                            <span class="text-gray-600">Room Number:</span>
+                            <span class="font-bold text-gray-800">{{ room }}</span>
+                        </div>
+                        <div class="flex justify-between border-t pt-3">
+                            <span class="text-gray-600">Amount to Pay:</span>
+                            <span class="font-bold text-2xl text-green-600">{{ amount }} SAR</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Confirm Button Form -->
+                <form method="POST" action="{{ url_for('payment.payment') }}">
+                    <input type="hidden" name="room" value="{{ room }}">
+                    <input type="hidden" name="amount" value="{{ amount }}">
+                    <input type="hidden" name="token" value="{{ token }}">
+                    <input type="hidden" name="payment_method" value="mobile_qr">
+                    
+                    <button type="submit" 
+                            class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 rounded-xl transition text-lg">
+                        ✅ Confirm Payment ({{ amount }} SAR)
+                    </button>
+                </form>
+                
+                <div class="mt-4 text-center">
+                    <a href="{{ url_for('topup.topup') }}" 
+                       class="text-gray-500 text-sm hover:text-gray-600">
+                        ← Cancel and go back
+                    </a>
+                </div>
+            </div>
+        </div>
+        
+        <div class="text-center text-gray-400 text-xs mt-6">
+            Payment secured by Tayar
+        </div>
+    </div>
+</div>
+{% endblock %}
