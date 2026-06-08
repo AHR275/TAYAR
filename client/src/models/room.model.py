@@ -2,7 +2,7 @@
 from src.middleware.db import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
-
+from collections import defaultdict
 
 # ============================================
 # Room Model
@@ -57,6 +57,19 @@ class Room(db.Model):
     @classmethod
     def get_by_building(cls, building):
         return cls.query.filter_by(building=building).all()
+    
+    @classmethod
+    def get_by_buildings(cls):
+        """
+        Return all rooms grouped by building
+        """
+        rooms = cls.query.all()
+        grouped = defaultdict(list)
+        for room in rooms:
+            grouped[room.building].append(room.to_dict())
+
+        # Convert to list of dicts like your old JSON structure
+        return [{"building": b, "rooms": r} for b, r in grouped.items()]
 
     # ---------- Update ----------
     def update_balance(self, amount):
