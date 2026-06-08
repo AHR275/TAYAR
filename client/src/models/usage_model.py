@@ -36,11 +36,19 @@ class ElectricityUsage(db.Model):
     # ---------- Read ----------
     @classmethod
     def get_all(cls):
-        return cls.query.all()
+        data = cls.query.all()
+        return {
+            item.id: item.to_dict()
+            for item in data
+        }
 
     @classmethod
-    def get_by_id(cls, usage_id):
-        return cls.query.get(usage_id)
+    def get_by_room(cls, room_id):
+        data = cls.query.filter_by(room_id=room_id).order_by(cls.month).all()
+        return {
+            item.id: item.to_dict()
+            for item in data
+        }
 
     @classmethod
     def get_by_room(cls, room_id):

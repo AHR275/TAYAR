@@ -46,13 +46,20 @@ class User(db.Model):
         return user
 
     # ---------- Read ----------
-    @classmethod
+    @classmethod     
     def get_all(cls):
-        return cls.query.all()
+        users = cls.query.all()
+        return {
+            user.id: user.to_dict()
+            for user in users
+    }
 
     @classmethod
     def get_by_id(cls, user_id):
-        return cls.query.get(user_id)
+        user = cls.query.get(user_id)
+        return {"user": user.to_dict() if user else None}
+
+   
 
     @classmethod
     def get_by_username(cls, username):

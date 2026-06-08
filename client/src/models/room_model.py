@@ -1,12 +1,15 @@
 # src/models.py
-from src.middleware.db import db
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 from collections import defaultdict
+from src.middleware.db import db
+
+
 
 # ============================================
 # Room Model
 # ============================================
+
 class Room(db.Model):
     __tablename__ = "rooms"
 
@@ -42,35 +45,51 @@ class Room(db.Model):
         return room
 
     # ---------- Read ----------
+   # ---------- READ (FIXED) ----------
+
     @classmethod
     def get_all(cls):
-        return cls.query.all()
+        rooms = cls.query.all()
+        return {
+            room.id: room.to_dict()
+            for room in rooms
+        }
 
     @classmethod
     def get_by_id(cls, room_id):
-        return cls.query.get(room_id)
+        room = cls.query.get(room_id)
+        return {"room": room.to_dict() if room else None}
 
     @classmethod
     def get_by_room_number(cls, room_number):
-        return cls.query.filter_by(room_number=room_number).first()
+        room = cls.query.filter_by(room_number=room_number).first()
+        return {"room": room.to_dict() if room else None}
 
     @classmethod
     def get_by_building(cls, building):
-        return cls.query.filter_by(building=building).all()
+        rooms = cls.query.filter_by(building=building).all()
+        return {
+            room.id: room.to_dict()
+            for room in rooms
+        }
     
     @classmethod
     def get_by_buildings(cls):
-        """
-        Return all rooms grouped by building
-        """
         rooms = cls.query.all()
-        grouped = defaultdict(list)
+
+        grouped = defaultdict(dict)
+
         for room in rooms:
-            grouped[room.building].append(room.to_dict())
+            grouped[room.building][room.id] = room.to_dict()
 
-        # Convert to list of dicts like your old JSON structure
-        return [{"building": b, "rooms": r} for b, r in grouped.items()]
-
+        return {
+            "buildings": {
+                building: {
+                    "rooms": rooms_dict
+                }
+                for building, rooms_dict in grouped.items()
+            }
+        }
     # ---------- Update ----------
     def update_balance(self, amount):
         self.current_balance = float(self.current_balance) + amount

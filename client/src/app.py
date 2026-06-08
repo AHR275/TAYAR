@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from src.middleware.config import CONFIG
-from src.middleware.db import db 
+from src.middleware.db import db , create_database
+
 
 
 from src.routes.topup import topup_bp
@@ -11,6 +12,15 @@ from src.routes.paymment import payment_bp
 
 app = Flask(__name__)
 app.config.update(CONFIG)
+
+
+create_database()
+db.init_app(app)
+
+with app.app_context():
+    import src.models   # Import all models once
+
+    db.create_all()
 
 
 

@@ -28,8 +28,12 @@
                     
                     <div class="space-y-3">
                         <div class="flex justify-between">
+                            <span class="text-gray-600"> Building:</span>
+                            <span class="font-bold text-gray-800">{{ room['room']["building"] }}</span>
+                        </div>
+                        <div class="flex justify-between">
                             <span class="text-gray-600">Room Number:</span>
-                            <span class="font-bold text-gray-800">{{ room }}</span>
+                            <span class="font-bold text-gray-800">{{ room['room']["room_number"] }}</span>
                         </div>
                         <div class="flex justify-between">
                             <span class="text-gray-600">Amount:</span>

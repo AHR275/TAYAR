@@ -34,11 +34,19 @@ class Transaction(db.Model):
     # ---------- Read ----------
     @classmethod
     def get_all(cls):
-        return cls.query.order_by(cls.created_at.desc()).all()
+        txs = cls.query.order_by(cls.created_at.desc()).all()
+        return {
+            tx.id: tx.to_dict()
+            for tx in txs
+        }
 
     @classmethod
-    def get_by_id(cls, transaction_id):
-        return cls.query.get(transaction_id)
+    def get_by_user(cls, user_id):
+        txs = cls.query.filter_by(user_id=user_id).order_by(cls.created_at.desc()).all()
+        return {
+            tx.id: tx.to_dict()
+            for tx in txs
+        }
 
     @classmethod
     def get_by_user(cls, user_id):
