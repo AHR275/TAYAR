@@ -1,19 +1,119 @@
 {% extends 'index.html' %}
 
 {% block title %}
-Home
+Tayar? - Smart Electricity System
 {% endblock %}
 
 {% block content %}
 
-<div class="bg-white p-8 rounded-2xl shadow">
-    <h1 class="text-4xl font-bold mb-4">
-        Welcome to PowerNest
+<!-- HERO SECTION -->
+<section class="bg-sky-500 text-white p-16 rounded-2xl mb-10 text-center shadow-lg">
+
+    <h1 class="text-5xl font-bold mb-4 text-black">
+        Tayar? ⚡
     </h1>
 
-    <p class="text-gray-600">
-        Online Electricity Top-Up System
+    <p class="text-lg text-white mb-6">
+        Smart Electricity Top-Up System for Student Housing
     </p>
-</div>
+
+    <div class="flex justify-center gap-4">
+        <a href="/register"
+           class="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-300">
+            Get Started
+        </a>
+
+        <a href="/login"
+           class="bg-white text-black px-6 py-3 rounded-lg font-bold hover:bg-gray-200">
+            Login
+        </a>
+    </div>
+
+</section>
+
+<!-- ABOUT -->
+<section class="text-center mb-12">
+
+    <h2 class="text-3xl font-bold text-black mb-4">
+        What is Tayar??
+    </h2>
+
+    <p class="text-gray-700 max-w-3xl mx-auto">
+        A smart electricity management system designed for student housing.
+        Recharge, monitor usage, and manage payments easily in one platform.
+    </p>
+
+</section>
+
+<!-- FEATURES -->
+<section class="grid md:grid-cols-3 gap-6 mb-12">
+
+    <div class="bg-white border-l-4 border-sky-500 p-6 rounded-xl shadow">
+        <h3 class="font-bold text-black text-xl mb-2">⚡ Fast Top-Up</h3>
+        <p class="text-gray-600">Instant electricity recharge anytime.</p>
+    </div>
+
+    <div class="bg-white border-l-4 border-yellow-400 p-6 rounded-xl shadow">
+        <h3 class="font-bold text-black text-xl mb-2">📊 Smart Monitoring</h3>
+        <p class="text-gray-600">Track usage in real time.</p>
+    </div>
+
+    <div class="bg-white border-l-4 border-sky-500 p-6 rounded-xl shadow">
+        <h3 class="font-bold text-black text-xl mb-2">🔒 Secure System</h3>
+        <p class="text-gray-600">Safe and reliable payments.</p>
+    </div>
+
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="bg-white p-10 rounded-xl shadow mb-12 border-t-4 border-sky-500">
+
+    <h2 class="text-3xl font-bold text-black mb-8 text-center">
+        How It Works
+    </h2>
+
+    <div class="grid md:grid-cols-4 gap-6 text-center">
+
+        <div>
+            <div class="text-3xl font-bold text-sky-500">1</div>
+            <p class="text-black">Sign Up</p>
+        </div>
+
+        <div>
+            <div class="text-3xl font-bold text-yellow-400">2</div>
+            <p class="text-black">Login</p>
+        </div>
+
+        <div>
+            <div class="text-3xl font-bold text-sky-500">3</div>
+            <p class="text-black">Top Up</p>
+        </div>
+
+        <div>
+            <div class="text-3xl font-bold text-yellow-400">4</div>
+            <p class="text-black">Monitor</p>
+        </div>
+
+    </div>
+
+</section>
+
+<!-- CTA -->
+<section class="bg-black text-white p-10 rounded-xl text-center">
+
+    <h2 class="text-3xl font-bold mb-4">
+        Start Managing Electricity Smartly
+    </h2>
+
+    <p class="mb-6 text-gray-300">
+        Join Tayar? today and simplify your life.
+    </p>
+
+    <a href="/register"
+       class="bg-yellow-400 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-300">
+        Create Account
+    </a>
+
+</section>
 
 {% endblock %}

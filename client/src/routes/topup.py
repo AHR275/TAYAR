@@ -5,7 +5,8 @@ from wtforms import StringField, IntegerField, RadioField, SubmitField
 from wtforms.validators import DataRequired, NumberRange
 from src.forms.topup_forms import TopupForm
 from src.middleware.data_center import TransData
-
+from src.models.room_model import Room
+from src.models.user_model import User
 global transactions
 
 
@@ -28,35 +29,75 @@ topup_bp = Blueprint(
 
 class TopupView(MethodView):
     def get(self):
-
-        amounts = [10, 20, 50,75,  100]
-        return render_template(
-            "topup.html",
-            form=TopupForm(),
-            amounts=amounts
-        )
-
-    def post(self):
+        amounts = [10, 20, 50, 75, 100]
         form = TopupForm()
-        amounts = [10, 20, 50,75,  100]
+        
+        # Get all buildings
+        buildings = Room.get_by_buildings()["buildings"] 
+         # assuming this returns list of building names
+    
+        # Build building choices for WTForms
+        buildings_name = list(buildings.keys())
+        form.building.choices = [(b,b) for b in buildings_name]  # use building name as value
 
-        if form.validate_on_submit():
+        # # Default selected building (first one)
+        default_building = buildings_name[0]
 
-            room = form.room.data
-            amount = form.amount.data
-           
-            
-
-            return redirect(
-
-                url_for("topup.history")
-            )
+        # # Get rooms for default building
+        rooms = buildings[default_building]["rooms"]
+        print("rooms" , rooms)
+        form.room.choices = [
+            (room["id"], f"Room {room['room_number']}")
+            for room in rooms.values()
+        ]
+        print("choices : ",form.room.choices)
 
         return render_template(
             "topup.html",
             form=form,
-            amounts= amounts
+            amounts=amounts,
+            buildings=buildings
         )
+
+    def post(self):
+        amounts = [10, 20, 50, 75, 100]
+        form = TopupForm()
+        selected_building = form.building.data
+        buildings = Room.get_by_buildings()["buildings"] 
+         # assuming this returns list of building names
+    
+        # Build building choices for WTForms
+        buildings_name = list(buildings.keys())
+        form.building.choices = [(b,b) for b in buildings_name]  # use building name as value
+
+        # # Default selected building (first one)
+        
+
+        # # Get rooms for default building
+        rooms = buildings[selected_building]["rooms"]
+        print("rooms" , rooms)
+        form.room.choices = [
+            (room["id"], f"Room {room['room_number']}")
+            for room in rooms.values()
+        ]
+
+
+        if form.validate_on_submit():
+            room = form.room.data
+            amount = form.amount.data
+
+            print("go to payment")
+            print(url_for("payment.payment", room=room, amount=amount))
+            return redirect(url_for("payment.payment", room=room, amount=amount))
+
+        return render_template(
+            "topup.html",
+            form=form,
+            amounts=amounts,
+            buildings=buildings
+        )
+    
+
 
 class TopupHistoryView(View):
     

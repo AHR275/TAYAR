@@ -1,0 +1,53 @@
+{% extends "index.html" %}
+
+{% block title %}Top Up Electricity{% endblock %}
+
+{% block content %}
+    
+<div class="container-fluid py-5" style="background-color: #88e0f4; color: #000000; min-height: 80vh;">
+    
+    <div class="row mb-4 px-3">
+        <div class="col">
+            <h2 class="fw-bold text-dark mb-1">Energy Analytics Dashboard</h2>
+            <p class="text-muted">Track room consumption patterns and real-time energy usage statistics.</p>
+        </div>
+    </div>
+
+    <div class="row g-4 px-3">
+        <div class="col-12">
+            
+            <div class="row g-3 mb-4">
+                <div class="col-md-6">
+                    <div class="card p-4 shadow-sm border-0 h-100" style="background-color: #F8F9FA; border-left: 5px solid #26B4F3;">
+                        <span class="text-muted small fw-bold text-uppercase">Average Daily Consumption</span>
+                        <h2 class="fw-bold my-2" style="color: #26B4F3;">22.1 kWh</h2>
+                        <span class="text-success small fw-medium">↓ 12% less than last week</span>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card p-4 shadow-sm border-0 h-100" style="background-color: #F8F9FA; border-left: 5px solid #FFDE4D;">
+                        <span class="text-muted small fw-bold text-uppercase">Peak Utilization Time</span>
+                        <h2 class="fw-bold my-2" style="color: #000000;">02:00 PM - 04:00 PM</h2>
+                        <span class="text-muted small">Matches heavy daytime appliance usage</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card p-4 shadow-sm border-0" style="background-color: #F8F9FA; border-radius: 8px;">
+                <h5 class="fw-bold text-dark mb-4">Weekly Consumption Overview</h5>
+                <div style="position: relative; width: 100%; height: auto;">
+                    <canvas id="weeklyUsageChart" width="400" height="150"></canvas>
+                </div>
+            </div>
+            
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0"></script>
+
+<script src="{{ url_for('static', filename='js/chart-config.js') }}"></script>
+
+{% endblock %}

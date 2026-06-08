@@ -1,4 +1,4 @@
-{% extends 'index.html' %}
+{% extends "index.html" %}
 
 {% block title %}
 Dashboard
@@ -6,17 +6,230 @@ Dashboard
 
 {% block content %}
 
-<div class="grid grid-cols-3 gap-6">
+<div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-800">
+        Welcome, {{ user.username }}
+    </h1>
 
-    <div class="bg-white p-6 rounded-2xl shadow">
-        <h2 class="text-lg font-bold">Current Balance</h2>
-        <p class="text-3xl mt-4">$120</p>
+
+<p class="text-gray-500 mt-2">
+    Monitor your room electricity balance and recent activity.
+</p>
+
+
+</div>
+
+<!-- Statistics Cards -->
+
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+
+
+<div class="bg-white rounded-xl shadow p-6">
+    <p class="text-gray-500 text-sm">
+        Room Number
+    </p>
+
+    <h2 class="text-3xl font-bold mt-2">
+        {{ room.room_number if room else "N/A" }}
+    </h2>
+</div>
+
+<div class="bg-white rounded-xl shadow p-6">
+    <p class="text-gray-500 text-sm">
+        Current Balance
+    </p>
+
+    <h2 class="text-3xl font-bold text-green-600 mt-2">
+        {{ room.current_balance if room else 0 }}
+    </h2>
+</div>
+
+<div class="bg-white rounded-xl shadow p-6">
+    <p class="text-gray-500 text-sm">
+        Total Transactions
+    </p>
+
+    <h2 class="text-3xl font-bold text-blue-600 mt-2">
+        {{ transactions|length }}
+    </h2>
+</div>
+
+<div class="bg-white rounded-xl shadow p-6">
+
+    <p class="text-gray-500 text-sm">
+        Electricity Status
+    </p>
+
+    {% if room and room.current_balance > 50 %}
+        <h2 class="text-2xl font-bold text-green-600 mt-2">
+            Excellent
+        </h2>
+
+    {% elif room and room.current_balance > 20 %}
+        <h2 class="text-2xl font-bold text-yellow-500 mt-2">
+            Moderate
+        </h2>
+
+    {% else %}
+        <h2 class="text-2xl font-bold text-red-600 mt-2">
+            Low Balance
+        </h2>
+    {% endif %}
+
+</div>
+
+
+</div>
+
+<!-- Quick Actions -->
+
+<div class="mt-8 flex flex-wrap gap-4">
+
+
+<a href="/topup"
+   class="bg-blue-600 text-white px-6 py-3 rounded-lg hover:bg-blue-700 transition">
+    Top Up Electricity
+</a>
+
+<a href="/topup/history"
+   class="bg-gray-800 text-white px-6 py-3 rounded-lg hover:bg-gray-900 transition">
+    View History
+</a>
+
+
+</div>
+
+<!-- Profile Information -->
+
+<div class="mt-8 bg-white rounded-xl shadow p-6">
+
+
+<h2 class="text-xl font-bold mb-4">
+    Profile Information
+</h2>
+
+<div class="grid md:grid-cols-2 gap-6">
+
+    <div>
+        <p class="text-gray-500">
+            Username
+        </p>
+
+        <p class="font-semibold text-lg">
+            {{ user.username }}
+        </p>
     </div>
 
-    <div class="bg-white p-6 rounded-2xl shadow">
-        <h2 class="text-lg font-bold">Room Number</h2>
-        <p class="text-3xl mt-4">A-204</p>
+    <div>
+        <p class="text-gray-500">
+            Email
+        </p>
+
+        <p class="font-semibold text-lg">
+            {{ user.email }}
+        </p>
     </div>
+
+</div>
+
+
+</div>
+
+<!-- Transactions -->
+
+<div class="mt-8 bg-white rounded-xl shadow p-6">
+
+
+<h2 class="text-xl font-bold mb-4">
+    Recent Transactions
+</h2>
+
+{% if transactions %}
+
+<div class="overflow-x-auto">
+
+    <table class="w-full">
+
+        <thead>
+            <tr class="border-b bg-gray-50">
+
+                <th class="text-left py-3 px-2">
+                    ID
+                </th>
+
+                <th class="text-left py-3 px-2">
+                    Amount
+                </th>
+
+                <th class="text-left py-3 px-2">
+                    Status
+                </th>
+
+                <th class="text-left py-3 px-2">
+                    Date
+                </th>
+
+            </tr>
+        </thead>
+
+        <tbody>
+
+            {% for tx in transactions %}
+            <tr class="border-b hover:bg-gray-50">
+
+                <td class="py-3 px-2">
+                    {{ tx.id }}
+                </td>
+
+                <td class="py-3 px-2">
+                    {{ tx.amount }}
+                </td>
+
+                <td class="py-3 px-2">
+
+                    {% if tx.status == "success" %}
+                        <span class="text-green-600 font-semibold">
+                            Success
+                        </span>
+
+                    {% elif tx.status == "pending" %}
+                        <span class="text-yellow-500 font-semibold">
+                            Pending
+                        </span>
+
+                    {% else %}
+                        <span class="text-gray-600">
+                            {{ tx.status }}
+                        </span>
+                    {% endif %}
+
+                </td>
+
+                <td class="py-3 px-2">
+                    {{ tx.created_at }}
+                </td>
+
+            </tr>
+            {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% else %}
+
+<div class="text-center py-8">
+
+    <p class="text-gray-500">
+        No transactions found.
+    </p>
+
+</div>
+
+{% endif %}
+
 
 </div>
 

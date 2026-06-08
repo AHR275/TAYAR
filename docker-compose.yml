@@ -1,0 +1,69 @@
+version: '3.8'
+
+services:
+  # MySQL Database
+  mysql:
+    image: mysql:8.0
+    container_name: tayar_mysql
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: root123
+      MYSQL_DATABASE: tayar_db
+      MYSQL_USER: tayar_user
+      MYSQL_PASSWORD: tayar_pass
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./database/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 10s
+      retries: 5
+
+  # phpMyAdmin - Database GUI
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: tayar_phpmyadmin
+    restart: always
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root123
+      UPLOAD_LIMIT: 100M
+    ports:
+      - "8080:80"
+    depends_on:
+      mysql:
+        condition: service_healthy
+
+  # Flask Web Application (from client/index.py)
+  flask_app:
+    build: .
+    container_name: tayar_flask
+    restart: always
+    environment:
+      # Database connection
+      DB_HOST: mysql
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: root123
+      DB_NAME: tayar_db
+      # Flask settings
+      FLASK_ENV: development
+      FLASK_APP: client/index.py
+      SECRET_KEY: your-secret-key-here-change-in-production
+    ports:
+      - "5000:5000"
+    volumes:
+      # Mount entire project, but working directory will be /app
+      - .:/app
+    working_dir: /app/client  # This is the key change!
+    depends_on:
+      mysql:
+        condition: service_healthy
+    command: python index.py
+
+volumes:
+  mysql_data:
