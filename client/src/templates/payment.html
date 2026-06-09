@@ -66,7 +66,7 @@
 
                     <!-- Confirm Payment Button -->
                     <form method="POST" action="{{ url_for('payment.payment') }}">
-                        <input type="hidden" name="room" value="{{ room }}">
+                        <input type="hidden" name="room_id" value="{{ room['room']["id"] }}">
                         <input type="hidden" name="amount" value="{{ amount }}">
                         <input type="hidden" name="payment_method" value="card">
                         
