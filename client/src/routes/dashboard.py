@@ -4,6 +4,10 @@ from flask.views import MethodView
 from src.models.user_model import User
 from src.models.room_model import Room
 
+from src.middleware.session_manager import SessionManager
+
+user_id = SessionManager.get_user_id()
+
 dashboard_bp = Blueprint(
     "dashboard",
     __name__,
@@ -15,7 +19,7 @@ class DashboardView(MethodView):
 
     def get(self):
 
-        user_id = session.get("user_id")
+        
 
         if not user_id:
             return redirect(url_for("auth.login"))

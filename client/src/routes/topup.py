@@ -87,7 +87,8 @@ class TopupView(MethodView):
             amount = form.amount.data
 
             print("go to payment")
-            print(url_for("payment.payment", room=room, amount=amount))
+            print("room :" , room, "\n amount : " , amount )
+            # print(url_for("payment.payment", room=room, amount=amount))
             return redirect(url_for("payment.payment", room=room, amount=amount))
 
         return render_template(

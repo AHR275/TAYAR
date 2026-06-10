@@ -43,10 +43,12 @@ class LoginView(MethodView):
 
             if user and check_password_hash(user.password, password):
 
-                session["user_id"] = user.id
-                session["username"] = user.username
-                session["email"] = user.email
-                session["is_admin"] = user.is_admin
+                session["user"] = {
+                    "id": user.id,
+                    "username": user.username,
+                    "email": user.email,
+                    "is_admin": user.is_admin
+                }
 
                 flash("Login successful!", "success")
                 return redirect(url_for("dashboard.dashboard"))
