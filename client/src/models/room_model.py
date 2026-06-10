@@ -59,6 +59,10 @@ class Room(db.Model):
     def get_by_id(cls, room_id):
         room = cls.query.get(room_id)
         return {"room": room.to_dict() if room else None}
+    
+    @classmethod
+    def get_by_id_obj(cls, room_id):
+        return cls.query.get(room_id)
 
     @classmethod
     def get_by_room_number(cls, room_number):

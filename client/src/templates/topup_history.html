@@ -4,50 +4,101 @@
 
 {% block content %}
 
-<tbody>
+<div class="p-6">
 
-{% for transaction in transactions %}
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Transactions</h1>
 
-<tr class="border-t">
+        <div class="text-sm text-gray-500">
+            Total: {{ transactions|length }}
+        </div>
+    </div>
 
-    <td class="p-4">
-        #{{ transaction.id }}
-    </td>
+    <!-- Table Container -->
+    <div class="bg-white shadow-md rounded-lg overflow-hidden">
 
-    <td class="p-4">
-        {{ transaction.room }}
-    </td>
+        <table class="w-full text-left">
 
-    <td class="p-4">
-        ${{ transaction.amount }}
-    </td>
+            <!-- Table Head -->
+            <thead class="bg-gray-100 text-gray-700 text-sm uppercase">
+                <tr>
+                    <th class="p-4">ID</th>
+                    <th class="p-4">Description</th>
+                    <th class="p-4">Amount</th>
+                    <th class="p-4">Date</th>
+                    <th class="p-4">Status</th>
+                </tr>
+            </thead>
 
-    <td class="p-4">
-        {{ transaction.date }}
-    </td>
+            <!-- Table Body -->
+            <tbody class="text-gray-600 text-sm">
 
-    <td class="p-4">
+                {% if transactions and transactions|length > 0 %}
 
-        {% if transaction.status == "Success" %}
+                    {% for tx in transactions %}
 
-        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full">
-            {{ transaction.status }}
-        </span>
+                    <tr class="border-t hover:bg-gray-50 transition">
 
-        {% else %}
+                        <td class="p-4 font-medium text-gray-800">
+                            #{{ transactions[tx]["id"] }}
+                        </td>
 
-        <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full">
-            {{ transaction.status }}
-        </span>
+                        <td class="p-4">
+                            {{ transactions[tx]["description"] }}
+                        </td>
 
-        {% endif %}
+                        <td class="p-4 font-semibold text-green-600">
+                            ${{ transactions[tx]["amount"] }}
+                        </td>
 
-    </td>
+                        <td class="p-4">
+                            {{ transactions[tx]["created_at"] }}
+                        </td>
 
-</tr>
+                        <td class="p-4">
 
-{% endfor %}
+                            {% if transactions[tx]["status"] == "success" %}
 
-</tbody>
+                            <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                Success
+                            </span>
+
+                            {% elif transactions[tx]["status"] == "Pending" %}
+
+                            <span class="bg-yellow-100 text-yellow-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                Pending
+                            </span>
+
+                            {% else %}
+
+                            <span class="bg-red-100 text-red-700 px-3 py-1 rounded-full text-xs font-semibold">
+                                Failed
+                            </span>
+
+                            {% endif %}
+
+                        </td>
+
+                    </tr>
+
+                    {% endfor %}
+
+                {% else %}
+
+                    <tr>
+                        <td colspan="5" class="text-center p-10 text-gray-500">
+                            No transactions found.
+                        </td>
+                    </tr>
+
+                {% endif %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+</div>
 
 {% endblock %}

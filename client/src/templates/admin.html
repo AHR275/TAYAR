@@ -1,0 +1,194 @@
+{% extends "index.html" %}
+
+{% block title %}Admin Panel{% endblock %}
+
+{% block content %}
+
+<div class="mb-8">
+    <h1 class="text-4xl font-bold text-gray-800">Admin Panel</h1>
+    <p class="text-gray-500 mt-2">Manage everything in one place</p>
+</div>
+
+<!-- ================= USERS ================= -->
+<div class="bg-white p-6 rounded-xl shadow mb-8">
+
+    <h2 class="text-xl font-bold mb-4">Users</h2>
+
+    <table class="w-full">
+
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="p-3">ID</th>
+                <th class="p-3">Username</th>
+                <th class="p-3">Email</th>
+                <th class="p-3">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for user in users.values() %}
+        <tr class="border-b">
+
+            <td class="p-3">{{ user.id }}</td>
+            <td class="p-3">{{ user.username }}</td>
+            <td class="p-3">{{ user.email }}</td>
+
+            <td class="p-3">
+
+                <!-- UPDATE -->
+                <form method="POST" action="/admin/users" class="inline">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+
+                    <input name="username" value="{{ user.username }}" class="border px-2 py-1">
+                    <input name="email" value="{{ user.email }}" class="border px-2 py-1">
+
+                    <button class="bg-blue-500 text-white px-3 py-1 rounded">
+                        Save
+                    </button>
+                </form>
+
+                <!-- DELETE -->
+                <form method="POST" action="/admin/users" class="inline">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="user_id" value="{{ user.id }}">
+
+                    <button class="bg-red-500 text-white px-3 py-1 rounded">
+                        Delete
+                    </button>
+                </form>
+
+            </td>
+
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <!-- CREATE USER -->
+    <form method="POST" action="/admin/users" class="mt-4 flex gap-2">
+        <input type="hidden" name="action" value="create">
+
+        <input name="username" placeholder="Username" class="border p-2">
+        <input name="email" placeholder="Email" class="border p-2">
+        <input name="password" placeholder="Password" class="border p-2">
+
+        <button class="bg-green-600 text-white px-4 py-2 rounded">
+            Add User
+        </button>
+    </form>
+
+</div>
+
+
+<!-- ================= ROOMS ================= -->
+<div class="bg-white p-6 rounded-xl shadow mb-8">
+
+    <h2 class="text-xl font-bold mb-4">Rooms</h2>
+
+    <table class="w-full">
+
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="p-3">Room</th>
+                <th class="p-3">Building</th>
+                <th class="p-3">Balance</th>
+                <th class="p-3">Actions</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for room in rooms.values() %}
+        <tr class="border-b">
+
+            <td class="p-3">{{ room.room_number }}</td>
+            <td class="p-3">{{ room.building }}</td>
+            <td class="p-3">{{ room.current_balance }}</td>
+
+            <td class="p-3">
+
+                <!-- UPDATE -->
+                <form method="POST" action="/admin/rooms" class="inline">
+                    <input type="hidden" name="action" value="update">
+                    <input type="hidden" name="room_id" value="{{ room.id }}">
+
+                    <input name="room_number" value="{{ room.room_number }}" class="border px-2 py-1">
+                    <input name="building" value="{{ room.building }}" class="border px-2 py-1">
+                    <input name="balance" value="{{ room.current_balance }}" class="border px-2 py-1">
+
+                    <button class="bg-blue-500 text-white px-3 py-1 rounded">
+                        Save
+                    </button>
+                </form>
+
+                <!-- DELETE -->
+                <form method="POST" action="/admin/rooms" class="inline">
+                    <input type="hidden" name="action" value="delete">
+                    <input type="hidden" name="room_id" value="{{ room.id }}">
+
+                    <button class="bg-red-500 text-white px-3 py-1 rounded">
+                        Delete
+                    </button>
+                </form>
+
+            </td>
+
+        </tr>
+        {% endfor %}
+
+        </tbody>
+    </table>
+
+    <!-- CREATE ROOM -->
+    <form method="POST" action="/admin/rooms" class="mt-4 flex gap-2">
+        <input type="hidden" name="action" value="create">
+
+        <input name="room_number" placeholder="Room" class="border p-2">
+        <input name="building" placeholder="Building" class="border p-2">
+        <input name="balance" placeholder="Balance" class="border p-2">
+
+        <button class="bg-green-600 text-white px-4 py-2 rounded">
+            Add Room
+        </button>
+    </form>
+
+</div>
+
+
+<!-- ================= TRANSACTIONS ================= -->
+<div class="bg-white p-6 rounded-xl shadow">
+
+    <h2 class="text-xl font-bold mb-4">Transactions</h2>
+
+    <table class="w-full">
+
+        <thead class="bg-gray-50">
+            <tr>
+                <th class="p-3">ID</th>
+                <th class="p-3">User</th>
+                <th class="p-3">Amount</th>
+                <th class="p-3">Status</th>
+            </tr>
+        </thead>
+
+        <tbody>
+
+        {% for tx in transactions.values() %}
+        <tr class="border-b">
+            <td class="p-3">{{ tx.id }}</td>
+            <td class="p-3">{{ tx.user_id }}</td>
+            <td class="p-3">{{ tx.amount }}</td>
+            <td class="p-3">{{ tx.status }}</td>
+        </tr>
+        {% endfor %}
+
+        </tbody>
+
+    </table>
+
+</div>
+
+{% endblock %}

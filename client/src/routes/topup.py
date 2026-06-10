@@ -4,14 +4,16 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, IntegerField, RadioField, SubmitField
 from wtforms.validators import DataRequired, NumberRange
 from src.forms.topup_forms import TopupForm
-from src.middleware.data_center import TransData
-from src.models.room_model import Room
-from src.models.user_model import User
-global transactions
 
 
-td= TransData()
-transactions = td.get_transactions()
+from src.models import Room , User , Transaction 
+from src.middleware.session_manager import SessionManager
+
+
+
+
+
+
 
 
 topup_bp = Blueprint(
@@ -29,6 +31,10 @@ topup_bp = Blueprint(
 
 class TopupView(MethodView):
     def get(self):
+        user = SessionManager.get_user()
+        if not user:
+            return redirect(url_for("auth.login"))
+        user_id = user["id"]
         amounts = [10, 20, 50, 75, 100]
         form = TopupForm()
         
@@ -60,6 +66,10 @@ class TopupView(MethodView):
         )
 
     def post(self):
+        user = SessionManager.get_user()
+        if not user:
+            return redirect(url_for("auth.login"))
+        user_id = user["id"]
         amounts = [10, 20, 50, 75, 100]
         form = TopupForm()
         selected_building = form.building.data
@@ -104,12 +114,21 @@ class TopupHistoryView(View):
     
     
     def dispatch_request(self):
-        
+        user = SessionManager.get_user()
+        if not user:
+            return redirect(url_for("auth.login"))
+        user_id = user["id"]
+        transactions = Transaction.get_by_user(user_id)
+
+        topups = {
+            k: v for k, v in transactions.items()
+            if v["type"] == "topup"
+        }
         # print(transactions)
         # return "transi : " , transactions
         return render_template(
             "topup_history.html",
-            transactions=transactions
+            transactions=topups
         )
 
 

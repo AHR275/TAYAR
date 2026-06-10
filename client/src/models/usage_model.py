@@ -50,9 +50,7 @@ class ElectricityUsage(db.Model):
             for item in data
         }
 
-    @classmethod
-    def get_by_room(cls, room_id):
-        return cls.query.filter_by(room_id=room_id).order_by(cls.month).all()
+    
 
     @classmethod
     def get_by_month(cls, month):

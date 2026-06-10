@@ -125,15 +125,16 @@ class PaymentView(MethodView):
                     )
                 )
 
-                room = Room.get_users(user_id)
-                Room.update_balance(room,amount)
-                
+                room = Room.get_by_id_obj(room_id)
+                room.update_balance(amount_float)
+                print("trans : " , transaction)
+                print("tx_id " , transaction['id'])
 
 
                 return redirect(
                     url_for(
                         'payment.success',
-                        tx_id=20
+                        tx_id=transaction['id']
                     )
                 )
 

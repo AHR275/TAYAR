@@ -1,9 +1,7 @@
 from flask import Blueprint, render_template, session, redirect, url_for
 from flask.views import MethodView
 
-from src.models.user_model import User
-from src.models.room_model import Room
-
+from src.models import User , Room , Transaction
 from src.middleware.session_manager import SessionManager
 
 
@@ -35,7 +33,8 @@ class DashboardView(MethodView):
             room_data = Room.get_by_id(user["room_id"])
             room = room_data.get("room")
 
-        transactions = []
+        transactions = Transaction.get_by_user(user_id)
+        # print(transactions)
 
         return render_template(
             "dashboard.html",

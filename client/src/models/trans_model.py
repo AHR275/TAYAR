@@ -29,7 +29,7 @@ class Transaction(db.Model):
         )
         db.session.add(transaction)
         db.session.commit()
-        return transaction
+        return transaction.to_dict()
 
     # ---------- Read ----------
     @classmethod

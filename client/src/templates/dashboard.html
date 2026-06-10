@@ -174,39 +174,39 @@ Dashboard
 
         <tbody>
 
-            {% for tx in transactions %}
+            {% for tx in transactions.keys() %}
             <tr class="border-b hover:bg-gray-50">
 
                 <td class="py-3 px-2">
-                    {{ tx.id }}
+                    {{ transactions[tx]["id"] }}
                 </td>
 
                 <td class="py-3 px-2">
-                    {{ tx.amount }}
+                    {{ transactions[tx]["amount"] }}
                 </td>
 
                 <td class="py-3 px-2">
 
-                    {% if tx.status == "success" %}
+                    {% if transactions[tx]["status"] == "success" %}
                         <span class="text-green-600 font-semibold">
                             Success
                         </span>
 
-                    {% elif tx.status == "pending" %}
+                    {% elif transactions[tx]["status"] == "pending" %}
                         <span class="text-yellow-500 font-semibold">
                             Pending
                         </span>
 
                     {% else %}
                         <span class="text-gray-600">
-                            {{ tx.status }}
+                            {{ transactions[tx]["status"] }}
                         </span>
                     {% endif %}
 
                 </td>
 
                 <td class="py-3 px-2">
-                    {{ tx.created_at }}
+                    {{ transactions[tx]["created_at"] }}
                 </td>
 
             </tr>
