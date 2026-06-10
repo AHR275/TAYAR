@@ -47,10 +47,15 @@ class Transaction(db.Model):
             tx.id: tx.to_dict()
             for tx in txs
         }
-
     @classmethod
-    def get_by_user(cls, user_id):
-        return cls.query.filter_by(user_id=user_id).order_by(cls.created_at.desc()).all()
+    def get_by_id(cls, tx_id):
+        tx = cls.query.filter_by(id=tx_id).first()
+        return {
+            tx.id: tx.to_dict()
+            
+        }
+
+   
 
     @classmethod
     def get_by_type(cls, transaction_type):

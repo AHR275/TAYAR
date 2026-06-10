@@ -6,7 +6,6 @@ from src.models.room_model import Room
 
 from src.middleware.session_manager import SessionManager
 
-user_id = SessionManager.get_user_id()
 
 dashboard_bp = Blueprint(
     "dashboard",
@@ -16,13 +15,16 @@ dashboard_bp = Blueprint(
 
 
 class DashboardView(MethodView):
-
     def get(self):
+        user = SessionManager.get_user()
+
+          
 
         
 
-        if not user_id:
+        if not user:
             return redirect(url_for("auth.login"))
+        user_id = user["id"] 
 
         user_data = User.get_by_id(user_id)
         user = user_data.get("user")

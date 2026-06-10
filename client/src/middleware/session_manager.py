@@ -5,7 +5,7 @@ class SessionManager:
 
     @staticmethod
     def get_user():
-        return session.get("user", {})
+        return session.get("user")
 
     @staticmethod
     def get_user_id():
