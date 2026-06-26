@@ -1,0 +1,50 @@
+{% extends "index.html" %}
+
+{% block title %}My Profile{% endblock %}
+
+{% block content %}
+<div class="max-w-3xl mx-auto py-10 px-4">
+
+    <div class="bg-white rounded-xl shadow-md p-8">
+
+        <div class="mb-8">
+            <h1 class="text-3xl font-bold">My Profile</h1>
+            <p class="text-gray-500">
+                Manage your account information
+            </p>
+        </div>
+
+    <form method="POST">
+
+        {{ form.hidden_tag() }}
+
+        <div>
+            {{ form.username.label }}
+            {{ form.username(class="w-full border rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            {{ form.email.label }}
+            {{ form.email(class="w-full border rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            {{ form.password.label }}
+            {{ form.password(class="w-full border rounded px-3 py-2") }}
+        </div>
+
+        <div>
+            {{ form.confirm_password.label }}
+            {{ form.confirm_password(class="w-full border rounded px-3 py-2") }}
+        </div>
+
+        {{ form.submit(
+            class="bg-sky-500 text-white px-4 py-2 rounded"
+        ) }}
+
+    </form>
+
+    </div>
+
+</div>
+{% endblock %}

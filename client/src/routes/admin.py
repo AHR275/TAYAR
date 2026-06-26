@@ -1,112 +1,329 @@
-from flask import Blueprint, render_template, request, redirect, url_for, flash
+from flask import Blueprint, render_template, redirect, url_for, flash 
 from flask.views import MethodView
 
 from src.models import User, Room, Transaction, AdminLog
+from src.forms import AdminForms
 
+from src.routes.analyze_admin import analysis_admin_bp
 
-admin_bp = Blueprint("admin", __name__, url_prefix="/admin")
-
+admin_bp = Blueprint(
+"admin",
+__name__,
+url_prefix="/admin"
+)
 
 # =====================================================
-# MAIN DASHBOARD (ALL IN ONE PAGE)
+
+# DASHBOARD
+
 # =====================================================
+
 class AdminDashboard(MethodView):
+
 
     def get(self):
 
         return render_template(
             "admin.html",
+
             users=User.get_all(),
             rooms=Room.get_all(),
             transactions=Transaction.get_all(),
-            logs=AdminLog.get_all()
+            logs=AdminLog.get_all(),
+
+            create_user_form=AdminForms.CreateUserForm(),
+            update_user_form=AdminForms.UpdateUserForm(),
+            delete_user_form=AdminForms.DeleteUserForm(),
+
+            create_room_form=AdminForms.CreateRoomForm(),
+            update_room_form=AdminForms.UpdateRoomForm(),
+            delete_room_form=AdminForms.DeleteRoomForm()
         )
 
 
 # =====================================================
-# USERS ACTIONS
+
+# USERS
+
 # =====================================================
-class AdminUsers(MethodView):
+
+class AdminUserCreate(MethodView):
+
 
     def post(self):
 
-        action = request.form.get("action")
+        form = AdminForms.CreateUserForm()
 
-        # CREATE
-        if action == "create":
-            User.create(
-                request.form["username"],
-                request.form["email"],
-                request.form["password"],
-                request.form.get("room_id")
+        if not form.validate_on_submit():
+
+            flash(
+                "Invalid user data",
+                "error"
             )
-            flash("User created", "success")
 
-        # UPDATE (NO raw DB)
-        elif action == "update":
-            user = User.query.get_or_404(request.form["user_id"])
-            user.update_username(request.form["username"])
-            user.update_email(request.form["email"])
-            user.update_room(request.form.get("room_id"))
+            return redirect(
+                url_for("admin.dashboard")
+            )
 
-            flash("User updated", "success")
+        User.create(
+            username=form.username.data,
+            email=form.email.data,
+            password=form.password.data
+        )
 
-        # DELETE (USING MODEL METHOD)
-        elif action == "delete":
-            user = User.query.get_or_404(request.form["user_id"])
-            user.delete()
+        flash(
+            "User created successfully",
+            "success"
+        )
 
-            flash("User deleted", "success")
+        return redirect(
+            url_for("admin.dashboard")
+        )
 
-        return redirect(url_for("admin.dashboard"))
 
+class AdminUserUpdate(MethodView):
 
-# =====================================================
-# ROOMS ACTIONS
-# =====================================================
-class AdminRooms(MethodView):
 
     def post(self):
 
-        action = request.form.get("action")
+        form = AdminForms.UpdateUserForm()
 
-        # CREATE
-        if action == "create":
-            Room.create(
-                request.form["room_number"],
-                request.form["building"],
-                request.form.get("balance", 0)
+        if not form.validate_on_submit():
+
+            flash(
+                "Invalid user data",
+                "error"
             )
-            flash("Room created", "success")
 
-        # UPDATE (USING MODEL METHODS)
-        elif action == "update":
-            room = Room.query.get_or_404(request.form["room_id"])
+            return redirect(
+                url_for("admin.dashboard")
+            )
 
-            room.update_room_number(request.form["room_number"])
-            room.update_building(request.form["building"])
-            room.set_balance(request.form["balance"])
+        user = User.query.get_or_404(
+            form.user_id.data
+        )
 
-            flash("Room updated", "success")
+        user.update_username(
+            form.username.data
+        )
 
-        # DELETE (USING MODEL METHOD)
-        elif action == "delete":
-            room = Room.query.get_or_404(request.form["room_id"])
-            room.delete()
+        user.update_email(
+            form.email.data
+        )
 
-            flash("Room deleted", "success")
+        flash(
+            "User updated successfully",
+            "success"
+        )
 
-        return redirect(url_for("admin.dashboard"))
-    
+        return redirect(
+            url_for("admin.dashboard")
+        )
+
+
+class AdminUserDelete(MethodView):
+
+
+    def post(self):
+
+        form = AdminForms.DeleteUserForm()
+
+        if not form.validate_on_submit():
+
+            flash(
+                "Invalid request",
+                "error"
+            )
+
+            return redirect(
+                url_for("admin.dashboard")
+            )
+
+        user = User.query.get_or_404(
+            form.user_id.data
+        )
+
+        user.delete()
+
+        flash(
+            "User deleted successfully",
+            "success"
+        )
+
+        return redirect(
+            url_for("admin.dashboard")
+        )
+
+
+# =====================================================
+
+# ROOMS
+
+# =====================================================
+
+class AdminRoomCreate(MethodView):
+
+
+    def post(self):
+
+        form = AdminForms.CreateRoomForm()
+
+        if not form.validate_on_submit():
+
+            flash(
+                "Invalid room data",
+                "error"
+            )
+
+            return redirect(
+                url_for("admin.dashboard")
+            )
+
+        Room.create(
+            room_number=form.room_number.data,
+            building=form.building.data,
+            current_balance=form.balance.data
+        )
+
+        flash(
+            "Room created successfully",
+            "success"
+        )
+
+        return redirect(
+            url_for("admin.dashboard")
+        )
+
+
+class AdminRoomUpdate(MethodView):
+
+
+    def post(self):
+
+        form = AdminForms.UpdateRoomForm()
+
+        if not form.validate_on_submit():
+
+            flash(
+                "Invalid room data",
+                "error"
+            )
+
+            return redirect(
+                url_for("admin.dashboard")
+            )
+
+        room = Room.query.get_or_404(
+            form.room_id.data
+        )
+
+        room.update_room_number(
+            form.room_number.data
+        )
+
+        room.update_building(
+            form.building.data
+        )
+
+        room.set_balance(
+            form.balance.data
+        )
+
+        flash(
+            "Room updated successfully",
+            "success"
+        )
+
+        return redirect(
+            url_for("admin.dashboard")
+        )
+
+
+class AdminRoomDelete(MethodView):
+
+
+    def post(self):
+
+        form = AdminForms.DeleteRoomForm()
+
+        if not form.validate_on_submit():
+
+            flash(
+                "Invalid request",
+                "error"
+            )
+
+            return redirect(
+                url_for("admin.dashboard")
+            )
+
+        room = Room.query.get_or_404(
+            form.room_id.data
+        )
+
+        room.delete()
+
+        flash(
+            "Room deleted successfully",
+            "success"
+        )
+
+        return redirect(
+            url_for("admin.dashboard")
+        )
+
+
+# =====================================================
+
+# ROUTES
+
+# =====================================================
+admin_bp.register_blueprint(analysis_admin_bp)
 admin_bp.add_url_rule(
-    "/", view_func=AdminDashboard.as_view("dashboard")
+"/",
+view_func=AdminDashboard.as_view(
+"dashboard"
+)
 )
 
 admin_bp.add_url_rule(
-    "/users", view_func=AdminUsers.as_view("users")
+"/users/create",
+view_func=AdminUserCreate.as_view(
+"create_user"
+)
 )
 
 admin_bp.add_url_rule(
-    "/rooms", view_func=AdminRooms.as_view("rooms")
+"/users/update",
+view_func=AdminUserUpdate.as_view(
+"update_user"
+)
 )
 
+admin_bp.add_url_rule(
+"/users/delete",
+view_func=AdminUserDelete.as_view(
+"delete_user"
+)
+)
+
+admin_bp.add_url_rule(
+"/rooms/create",
+view_func=AdminRoomCreate.as_view(
+"create_room"
+)
+)
+
+admin_bp.add_url_rule(
+"/rooms/update",
+view_func=AdminRoomUpdate.as_view(
+"update_room"
+)
+)
+
+admin_bp.add_url_rule(
+"/rooms/delete",
+view_func=AdminRoomDelete.as_view(
+"delete_room"
+)
+)

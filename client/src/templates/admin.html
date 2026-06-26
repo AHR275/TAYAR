@@ -5,189 +5,343 @@
 {% block content %}
 
 <div class="mb-8">
-    <h1 class="text-4xl font-bold text-gray-800">Admin Panel</h1>
-    <p class="text-gray-500 mt-2">Manage everything in one place</p>
+    <h1 class="text-4xl font-bold text-gray-800">
+        Admin Panel
+    </h1>
+
+
+<p class="text-gray-500 mt-2">
+    Manage users, rooms, and transactions.
+</p>
+
+
 </div>
 
 <!-- ================= USERS ================= -->
+
 <div class="bg-white p-6 rounded-xl shadow mb-8">
 
-    <h2 class="text-xl font-bold mb-4">Users</h2>
 
-    <table class="w-full">
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">
+        Users
+    </h2>
+</div>
 
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="p-3">ID</th>
-                <th class="p-3">Username</th>
-                <th class="p-3">Email</th>
-                <th class="p-3">Actions</th>
-            </tr>
-        </thead>
+<table class="w-full">
 
-        <tbody>
-
-        {% for user in users.values() %}
-        <tr class="border-b">
-
-            <td class="p-3">{{ user.id }}</td>
-            <td class="p-3">{{ user.username }}</td>
-            <td class="p-3">{{ user.email }}</td>
-
-            <td class="p-3">
-
-                <!-- UPDATE -->
-                <form method="POST" action="/admin/users" class="inline">
-                    <input type="hidden" name="action" value="update">
-                    <input type="hidden" name="user_id" value="{{ user.id }}">
-
-                    <input name="username" value="{{ user.username }}" class="border px-2 py-1">
-                    <input name="email" value="{{ user.email }}" class="border px-2 py-1">
-
-                    <button class="bg-blue-500 text-white px-3 py-1 rounded">
-                        Save
-                    </button>
-                </form>
-
-                <!-- DELETE -->
-                <form method="POST" action="/admin/users" class="inline">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="user_id" value="{{ user.id }}">
-
-                    <button class="bg-red-500 text-white px-3 py-1 rounded">
-                        Delete
-                    </button>
-                </form>
-
-            </td>
-
+    <thead class="bg-gray-50">
+        <tr>
+            <th class="p-3 text-left">ID</th>
+            <th class="p-3 text-left">Username</th>
+            <th class="p-3 text-left">Email</th>
+            <th class="p-3 text-left">Actions</th>
         </tr>
-        {% endfor %}
+    </thead>
 
-        </tbody>
-    </table>
+    <tbody>
 
-    <!-- CREATE USER -->
-    <form method="POST" action="/admin/users" class="mt-4 flex gap-2">
-        <input type="hidden" name="action" value="create">
+    {% for user in users.values() %}
+    <tr class="border-b">
 
-        <input name="username" placeholder="Username" class="border p-2">
-        <input name="email" placeholder="Email" class="border p-2">
-        <input name="password" placeholder="Password" class="border p-2">
+        <td class="p-3">
+            {{ user.id }}
+        </td>
 
-        <button class="bg-green-600 text-white px-4 py-2 rounded">
-            Add User
-        </button>
+        <td class="p-3">
+            {{ user.username }}
+        </td>
+
+        <td class="p-3">
+            {{ user.email }}
+        </td>
+
+        <td class="p-3">
+
+            <div class="flex flex-wrap gap-2">
+
+                <!-- UPDATE USER -->
+                <form method="POST"
+                      action="{{ url_for('admin.update_user') }}"
+                      class="flex flex-wrap gap-2">
+
+                    {{ update_user_form.hidden_tag() }}
+
+                    {{ update_user_form.user_id(
+                        value=user.id
+                    ) }}
+
+                    {{ update_user_form.username(
+                        value=user.username,
+                        class="border rounded px-2 py-1"
+                    ) }}
+
+                    {{ update_user_form.email(
+                        value=user.email,
+                        class="border rounded px-2 py-1"
+                    ) }}
+
+                    {{ update_user_form.submit(
+                        class="bg-blue-500 text-white px-3 py-1 rounded"
+                    ) }}
+
+                </form>
+
+                <!-- DELETE USER -->
+                <form method="POST"
+                      action="{{ url_for('admin.delete_user') }}">
+
+                    {{ delete_user_form.hidden_tag() }}
+
+                    {{ delete_user_form.user_id(
+                        value=user.id
+                    ) }}
+
+                    {{ delete_user_form.submit(
+                        class="bg-red-500 text-white px-3 py-1 rounded"
+                    ) }}
+
+                </form>
+
+            </div>
+
+        </td>
+
+    </tr>
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<!-- CREATE USER -->
+<div class="mt-6">
+
+    <h3 class="font-semibold mb-3">
+        Create User
+    </h3>
+
+    <form method="POST"
+          action="{{ url_for('admin.create_user') }}"
+          class="flex flex-wrap gap-2">
+
+        {{ create_user_form.hidden_tag() }}
+
+        {{ create_user_form.username(
+            class="border rounded p-2",
+            placeholder="Username"
+        ) }}
+
+        {{ create_user_form.email(
+            class="border rounded p-2",
+            placeholder="Email"
+        ) }}
+
+        {{ create_user_form.password(
+            class="border rounded p-2",
+            placeholder="Password"
+        ) }}
+
+        {{ create_user_form.submit(
+            class="bg-green-600 text-white px-4 py-2 rounded"
+        ) }}
+
     </form>
 
 </div>
 
+
+</div>
 
 <!-- ================= ROOMS ================= -->
+
 <div class="bg-white p-6 rounded-xl shadow mb-8">
 
-    <h2 class="text-xl font-bold mb-4">Rooms</h2>
 
-    <table class="w-full">
+<div class="flex justify-between items-center mb-4">
+    <h2 class="text-xl font-bold">
+        Rooms
+    </h2>
+</div>
 
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="p-3">Room</th>
-                <th class="p-3">Building</th>
-                <th class="p-3">Balance</th>
-                <th class="p-3">Actions</th>
-            </tr>
-        </thead>
+<table class="w-full">
 
-        <tbody>
-
-        {% for room in rooms.values() %}
-        <tr class="border-b">
-
-            <td class="p-3">{{ room.room_number }}</td>
-            <td class="p-3">{{ room.building }}</td>
-            <td class="p-3">{{ room.current_balance }}</td>
-
-            <td class="p-3">
-
-                <!-- UPDATE -->
-                <form method="POST" action="/admin/rooms" class="inline">
-                    <input type="hidden" name="action" value="update">
-                    <input type="hidden" name="room_id" value="{{ room.id }}">
-
-                    <input name="room_number" value="{{ room.room_number }}" class="border px-2 py-1">
-                    <input name="building" value="{{ room.building }}" class="border px-2 py-1">
-                    <input name="balance" value="{{ room.current_balance }}" class="border px-2 py-1">
-
-                    <button class="bg-blue-500 text-white px-3 py-1 rounded">
-                        Save
-                    </button>
-                </form>
-
-                <!-- DELETE -->
-                <form method="POST" action="/admin/rooms" class="inline">
-                    <input type="hidden" name="action" value="delete">
-                    <input type="hidden" name="room_id" value="{{ room.id }}">
-
-                    <button class="bg-red-500 text-white px-3 py-1 rounded">
-                        Delete
-                    </button>
-                </form>
-
-            </td>
-
+    <thead class="bg-gray-50">
+        <tr>
+            <th class="p-3 text-left">Room</th>
+            <th class="p-3 text-left">Building</th>
+            <th class="p-3 text-left">Balance</th>
+            <th class="p-3 text-left">Actions</th>
         </tr>
-        {% endfor %}
+    </thead>
 
-        </tbody>
-    </table>
+    <tbody>
 
-    <!-- CREATE ROOM -->
-    <form method="POST" action="/admin/rooms" class="mt-4 flex gap-2">
-        <input type="hidden" name="action" value="create">
+    {% for room in rooms.values() %}
+    <tr class="border-b">
 
-        <input name="room_number" placeholder="Room" class="border p-2">
-        <input name="building" placeholder="Building" class="border p-2">
-        <input name="balance" placeholder="Balance" class="border p-2">
+        <td class="p-3">
+            {{ room.room_number }}
+        </td>
 
-        <button class="bg-green-600 text-white px-4 py-2 rounded">
-            Add Room
-        </button>
+        <td class="p-3">
+            {{ room.building }}
+        </td>
+
+        <td class="p-3">
+            {{ room.current_balance }}
+        </td>
+
+        <td class="p-3">
+
+            <div class="flex flex-wrap gap-2">
+
+                <!-- UPDATE ROOM -->
+                <form method="POST"
+                      action="{{ url_for('admin.update_room') }}"
+                      class="flex flex-wrap gap-2">
+
+                    {{ update_room_form.hidden_tag() }}
+
+                    {{ update_room_form.room_id(
+                        value=room.id
+                    ) }}
+
+                    {{ update_room_form.room_number(
+                        value=room.room_number,
+                        class="border rounded px-2 py-1"
+                    ) }}
+
+                    {{ update_room_form.building(
+                        value=room.building,
+                        class="border rounded px-2 py-1"
+                    ) }}
+
+                    {{ update_room_form.balance(
+                        value=room.current_balance,
+                        class="border rounded px-2 py-1"
+                    ) }}
+
+                    {{ update_room_form.submit(
+                        class="bg-blue-500 text-white px-3 py-1 rounded"
+                    ) }}
+
+                </form>
+
+                <!-- DELETE ROOM -->
+                <form method="POST"
+                      action="{{ url_for('admin.delete_room') }}">
+
+                    {{ delete_room_form.hidden_tag() }}
+
+                    {{ delete_room_form.room_id(
+                        value=room.id
+                    ) }}
+
+                    {{ delete_room_form.submit(
+                        class="bg-red-500 text-white px-3 py-1 rounded"
+                    ) }}
+
+                </form>
+
+            </div>
+
+        </td>
+
+    </tr>
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
+<!-- CREATE ROOM -->
+<div class="mt-6">
+
+    <h3 class="font-semibold mb-3">
+        Create Room
+    </h3>
+
+    <form method="POST"
+          action="{{ url_for('admin.create_room') }}"
+          class="flex flex-wrap gap-2">
+
+        {{ create_room_form.hidden_tag() }}
+
+        {{ create_room_form.room_number(
+            class="border rounded p-2",
+            placeholder="Room Number"
+        ) }}
+
+        {{ create_room_form.building(
+            class="border rounded p-2",
+            placeholder="Building"
+        ) }}
+
+        {{ create_room_form.balance(
+            class="border rounded p-2",
+            placeholder="Balance"
+        ) }}
+
+        {{ create_room_form.submit(
+            class="bg-green-600 text-white px-4 py-2 rounded"
+        ) }}
+
     </form>
 
 </div>
 
 
+</div>
+
 <!-- ================= TRANSACTIONS ================= -->
+
 <div class="bg-white p-6 rounded-xl shadow">
 
-    <h2 class="text-xl font-bold mb-4">Transactions</h2>
 
-    <table class="w-full">
+<h2 class="text-xl font-bold mb-4">
+    Transactions
+</h2>
 
-        <thead class="bg-gray-50">
-            <tr>
-                <th class="p-3">ID</th>
-                <th class="p-3">User</th>
-                <th class="p-3">Amount</th>
-                <th class="p-3">Status</th>
-            </tr>
-        </thead>
+<table class="w-full">
 
-        <tbody>
-
-        {% for tx in transactions.values() %}
-        <tr class="border-b">
-            <td class="p-3">{{ tx.id }}</td>
-            <td class="p-3">{{ tx.user_id }}</td>
-            <td class="p-3">{{ tx.amount }}</td>
-            <td class="p-3">{{ tx.status }}</td>
+    <thead class="bg-gray-50">
+        <tr>
+            <th class="p-3 text-left">ID</th>
+            <th class="p-3 text-left">User</th>
+            <th class="p-3 text-left">Amount</th>
+            <th class="p-3 text-left">Status</th>
         </tr>
-        {% endfor %}
+    </thead>
 
-        </tbody>
+    <tbody>
 
-    </table>
+    {% for tx in transactions.values() %}
+    <tr class="border-b">
+
+        <td class="p-3">
+            {{ tx.id }}
+        </td>
+
+        <td class="p-3">
+            {{ tx.user_id }}
+        </td>
+
+        <td class="p-3">
+            {{ tx.amount }}
+        </td>
+
+        <td class="p-3">
+            {{ tx.status }}
+        </td>
+
+    </tr>
+    {% endfor %}
+
+    </tbody>
+
+</table>
+
 
 </div>
 

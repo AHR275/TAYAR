@@ -1,0 +1,390 @@
+{% extends "index.html" %}
+
+{% block title %}
+Electricity Analysis
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto p-8 space-y-8">
+
+    <!-- Header -->
+    <div>
+
+        <h1 class="text-4xl font-bold text-gray-800">
+            Electricity Usage Dashboard
+        </h1>
+
+        <p class="text-gray-500 mt-2">
+            Monitor electricity consumption and revenue.
+        </p>
+
+    </div>
+
+    <!-- Statistic Cards -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h3 class="text-gray-500 font-semibold">
+                Total Consumption
+            </h3>
+
+            <p class="text-3xl font-bold text-blue-600 mt-3">
+                {{ total_consumption }} kWh
+            </p>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h3 class="text-gray-500 font-semibold">
+                Total Revenue
+            </h3>
+
+            <p class="text-3xl font-bold text-green-600 mt-3">
+                RMB {{ total_amount }}
+            </p>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h3 class="text-gray-500 font-semibold">
+                Average Consumption
+            </h3>
+
+            <p class="text-3xl font-bold text-purple-600 mt-3">
+                {{ average_consumption }} kWh
+            </p>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h3 class="text-gray-500 font-semibold">
+                Peak Room
+            </h3>
+
+            {% if highest_room %}
+
+            <p class="text-2xl font-bold text-red-500 mt-3">
+
+                Room {{ highest_room.room_number }}
+
+            </p>
+
+            <p class="text-gray-500">
+
+                {{ highest_usage }} kWh
+
+            </p>
+
+            {% else %}
+
+            <p>No Data</p>
+
+            {% endif %}
+
+        </div>
+
+    </div>
+
+
+    <!-- Charts -->
+
+    <div class="grid grid-cols-1 xl:grid-cols-2 gap-8">
+
+        <!-- Monthly -->
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h2 class="text-xl font-semibold mb-6">
+
+                Monthly Consumption
+
+            </h2>
+
+            <canvas id="monthlyChart"></canvas>
+
+        </div>
+
+        <!-- Room -->
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h2 class="text-xl font-semibold mb-6">
+
+                Consumption by Room
+
+            </h2>
+
+            <canvas id="roomChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- Revenue -->
+
+    <div class="bg-white rounded-xl shadow-lg p-6">
+
+        <h2 class="text-xl font-semibold mb-6">
+
+            Revenue Distribution
+
+        </h2>
+
+        <div class="max-w-lg mx-auto">
+
+            <canvas id="revenueChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- Extra Statistics -->
+
+    <div class="grid md:grid-cols-3 gap-6">
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h3 class="font-semibold text-gray-600">
+
+                Lowest Consumption
+
+            </h3>
+
+            {% if lowest_room %}
+
+            <p class="text-2xl font-bold text-blue-500 mt-3">
+
+                Room {{ lowest_room.room_number }}
+
+            </p>
+
+            <p>
+
+                {{ lowest_usage }} kWh
+
+            </p>
+
+            {% endif %}
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h3 class="font-semibold text-gray-600">
+
+                Highest Revenue
+
+            </h3>
+
+            <p class="text-2xl font-bold text-green-600 mt-3">
+
+                {{ highest_revenue_room }}
+
+            </p>
+
+            <p>
+
+                RMB {{ highest_revenue }}
+
+            </p>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg p-6">
+
+            <h3 class="font-semibold text-gray-600">
+
+                Peak Month
+
+            </h3>
+
+            <p class="text-2xl font-bold text-orange-500 mt-3">
+
+                {{ peak_month }}
+
+            </p>
+
+            <p>
+
+                {{ peak_month_usage }} kWh
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- Usage Table -->
+
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+
+        <div class="p-6">
+
+            <h2 class="text-xl font-semibold">
+
+                Electricity Records
+
+            </h2>
+
+        </div>
+
+        <table class="min-w-full">
+
+            <thead class="bg-blue-600 text-white">
+
+                <tr>
+
+                    <th class="py-4">Room</th>
+
+                    <th>Month</th>
+
+                    <th>Consumption</th>
+
+                    <th>Amount Due</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for usage in usages.values() %}
+
+                <tr class="border-b hover:bg-gray-50 text-center">
+
+                    <td class="py-3">
+
+                        {{ usage.room_id }}
+
+                    </td>
+
+                    <td>
+
+                        {{ usage.month }}
+
+                    </td>
+
+                    <td>
+
+                        {{ usage.consumption_kwh }} kWh
+
+                    </td>
+
+                    <td>
+
+                        RMB {{ usage.amount_due }}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+</div>
+
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const monthlyLabels = {{ monthly_labels | tojson }};
+const monthlyValues = {{ monthly_values | tojson }};
+
+const roomLabels = {{ room_labels | tojson }};
+const roomValues = {{ room_values | tojson }};
+
+const revenueLabels = {{ revenue_labels | tojson }};
+const revenueValues = {{ revenue_values | tojson }};
+
+
+// Monthly Line Chart
+
+new Chart(document.getElementById("monthlyChart"),{
+
+    type:"line",
+
+    data:{
+
+        labels:monthlyLabels,
+
+        datasets:[{
+
+            label:"Monthly Consumption (kWh)",
+
+            data:monthlyValues,
+
+            borderWidth:3,
+
+            tension:.4,
+
+            fill:false
+
+        }]
+
+    }
+
+});
+
+
+// Room Bar Chart
+
+new Chart(document.getElementById("roomChart"),{
+
+    type:"bar",
+
+    data:{
+
+        labels:roomLabels,
+
+        datasets:[{
+
+            label:"Consumption",
+
+            data:roomValues
+
+        }]
+
+    }
+
+});
+
+
+// Revenue Doughnut
+
+new Chart(document.getElementById("revenueChart"),{
+
+    type:"doughnut",
+
+    data:{
+
+        labels:revenueLabels,
+
+        datasets:[{
+
+            data:revenueValues
+
+        }]
+
+    }
+
+});
+
+</script>
+
+{% endblock %}

@@ -1,9 +1,9 @@
-from flask import Flask, render_template
+from flask import Flask, render_template , redirect , url_for , request 
 from src.middleware.config import CONFIG
 from src.middleware.db import db 
 from src.middleware.init_db import create_database, seed_db
 
-
+from src.middleware.session_manager import SessionManager
 
 from src.routes.topup import topup_bp
 from src.routes.homepage import home_bp
@@ -11,6 +11,8 @@ from src.routes.paymment import payment_bp
 from src.routes.dashboard import dashboard_bp 
 from src.routes.auth import auth_bp
 from src.routes.admin import admin_bp
+from src.routes.analyze_admin import analysis_admin_bp
+from src.routes.analyze_user import analysis_user_bp
 # from src.routes.analyze import analyze_bp
 
 
@@ -41,9 +43,21 @@ app.register_blueprint(home_bp)
 app.register_blueprint(payment_bp)
 app.register_blueprint(dashboard_bp)
 app.register_blueprint(admin_bp)
+# app.register_blueprint(analysis_admin_bp)
+app.register_blueprint(analysis_user_bp)
 
-# app.register_blueprint(analyze_bp)
+@app.before_request  
+def before_request() :
+    user = SessionManager.get_user()
+    
 
+    ALLOWED_ENDPOINTS =["auth.register " , "auth.login" ,"homepage.homepage"]
+    ADMIN_ENDPOINTS= ["admin.dashboard" ]
+    
 
-if __name__ == "__main__":
-    app.run(debug=True, port=5000)
+    if request.endpoint not in ALLOWED_ENDPOINTS: 
+        if not user : 
+            return redirect(url_for("auth.login")) 
+        elif  user['is_admin']==False and request.endpoint.startswith("admin.") :
+            return render_template("forbidden.html") 
+

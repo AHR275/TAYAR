@@ -1,0 +1,387 @@
+{% extends "index.html" %}
+
+{% block title %}
+My Electricity Analysis
+{% endblock %}
+
+{% block content %}
+
+<div class="max-w-7xl mx-auto p-8 space-y-8">
+
+    <!-- Header -->
+
+    <div class="flex justify-between items-center">
+
+        <div>
+
+            <h1 class="text-4xl font-bold text-gray-800">
+                My Electricity Analysis
+            </h1>
+
+            {% if room %}
+            <p class="text-gray-500 mt-2">
+                Room {{ room.room_number }}
+            </p>
+            {% endif %}
+
+        </div>
+
+    </div>
+
+    {% if room %}
+
+    <!-- ========================= -->
+    <!-- Statistics -->
+    <!-- ========================= -->
+
+    <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 gap-6">
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+            <p class="text-gray-500 font-medium">
+                Total Consumption
+            </p>
+
+            <h2 class="text-3xl font-bold text-blue-600 mt-3">
+                {{ total_consumption }}
+            </h2>
+
+            <p class="text-gray-400">
+                kWh
+            </p>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+            <p class="text-gray-500 font-medium">
+                Total Bills
+            </p>
+
+            <h2 class="text-3xl font-bold text-green-600 mt-3">
+                RMB {{ total_amount }}
+            </h2>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+            <p class="text-gray-500 font-medium">
+                Average Monthly Usage
+            </p>
+
+            <h2 class="text-3xl font-bold text-purple-600 mt-3">
+                {{ average_consumption }}
+            </h2>
+
+            <p class="text-gray-400">
+                kWh
+            </p>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+            <p class="text-gray-500 font-medium">
+                Latest Bill
+            </p>
+
+            <h2 class="text-3xl font-bold text-red-500 mt-3">
+                RMB {{ latest_bill }}
+            </h2>
+
+            <p class="text-gray-400">
+                {{ latest_month }}
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- Charts -->
+    <!-- ========================= -->
+
+    <div class="grid lg:grid-cols-2 gap-8">
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+            <h2 class="text-xl font-semibold mb-5">
+
+                Monthly Electricity Usage
+
+            </h2>
+
+            <canvas id="usageChart"></canvas>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+            <h2 class="text-xl font-semibold mb-5">
+
+                Monthly Bills
+
+            </h2>
+
+            <canvas id="billChart"></canvas>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- Information Cards -->
+    <!-- ========================= -->
+
+    <div class="grid md:grid-cols-2 gap-6">
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+            <h3 class="font-semibold text-gray-600">
+
+                Highest Consumption Month
+
+            </h3>
+
+            <h2 class="text-3xl font-bold text-orange-500 mt-3">
+
+                {{ highest_month }}
+
+            </h2>
+
+            <p class="text-gray-500 mt-2">
+
+                {{ highest_usage }} kWh
+
+            </p>
+
+        </div>
+
+        <div class="bg-white rounded-xl shadow-md p-6">
+
+            <h3 class="font-semibold text-gray-600">
+
+                Current Room
+
+            </h3>
+
+            <h2 class="text-3xl font-bold text-blue-500 mt-3">
+
+                {{ room.room_number }}
+
+            </h2>
+
+            <p class="text-gray-500 mt-2">
+
+                Electricity Monitoring
+
+            </p>
+
+        </div>
+
+    </div>
+
+
+    <!-- ========================= -->
+    <!-- History Table -->
+    <!-- ========================= -->
+
+    <div class="bg-white rounded-xl shadow-md overflow-hidden">
+
+        <div class="p-6">
+
+            <h2 class="text-xl font-semibold">
+
+                Electricity Usage History
+
+            </h2>
+
+        </div>
+
+        <table class="min-w-full">
+
+            <thead class="bg-blue-600 text-white">
+
+                <tr>
+
+                    <th class="py-4">Month</th>
+
+                    <th>Consumption</th>
+
+                    <th>Amount Due</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            {% for usage in usages.values() %}
+
+                <tr class="border-b hover:bg-gray-50 text-center">
+
+                    <td class="py-3">
+
+                        {{ usage.month }}
+
+                    </td>
+
+                    <td>
+
+                        {{ usage.consumption_kwh }} kWh
+
+                    </td>
+
+                    <td>
+
+                        RMB {{ usage.amount_due }}
+
+                    </td>
+
+                </tr>
+
+            {% endfor %}
+
+            </tbody>
+
+        </table>
+
+    </div>
+
+    {% else %}
+
+    <div class="bg-white rounded-xl shadow-md p-10 text-center">
+
+        <h2 class="text-2xl font-bold text-gray-700">
+
+            No Room Assigned
+
+        </h2>
+
+        <p class="text-gray-500 mt-4">
+
+            Please contact the administrator to assign a room before viewing your electricity analysis.
+
+        </p>
+
+    </div>
+
+    {% endif %}
+
+</div>
+
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+const labels = {{ monthly_labels | tojson }};
+const usageData = {{ monthly_usage | tojson }};
+const billData = {{ monthly_bill | tojson }};
+
+
+// ============================
+// Usage Line Chart
+// ============================
+
+new Chart(
+
+    document.getElementById("usageChart"),
+
+    {
+
+        type: "line",
+
+        data: {
+
+            labels: labels,
+
+            datasets: [{
+
+                label: "Electricity Usage (kWh)",
+
+                data: usageData,
+
+                borderWidth: 3,
+
+                tension: 0.4,
+
+                fill: true
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+
+                    display: true
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+
+// ============================
+// Bills Bar Chart
+// ============================
+
+new Chart(
+
+    document.getElementById("billChart"),
+
+    {
+
+        type: "bar",
+
+        data: {
+
+            labels: labels,
+
+            datasets: [{
+
+                label: "Monthly Bills (RMB)",
+
+                data: billData
+
+            }]
+
+        },
+
+        options: {
+
+            responsive: true,
+
+            plugins: {
+
+                legend: {
+
+                    display: true
+
+                }
+
+            }
+
+        }
+
+    }
+
+);
+
+</script>
+
+{% endblock %}
