@@ -87,7 +87,9 @@ class AdminUserUpdate(MethodView):
     def post(self):
 
         form = AdminForms.UpdateUserForm()
-
+        print(form.user_id)
+        print(form.email)
+        print(form.username)
         if not form.validate_on_submit():
 
             flash(
@@ -127,6 +129,8 @@ class AdminUserDelete(MethodView):
     def post(self):
 
         form = AdminForms.DeleteUserForm()
+
+        
 
         if not form.validate_on_submit():
 

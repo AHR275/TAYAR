@@ -18,7 +18,7 @@ class ElectricityUsage(db.Model):
     amount_due = db.Column(db.Numeric(10, 2), default=0)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
-    __table_args__ = (db.UniqueConstraint('room_id', 'month', name='unique_room_month'),)
+    # __table_args__ = (db.UniqueConstraint('room_id', 'month', name='unique_room_month'),)
 
     # ---------- Create ----------
     @classmethod

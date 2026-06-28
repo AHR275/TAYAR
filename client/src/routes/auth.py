@@ -51,7 +51,11 @@ class LoginView(MethodView):
                 }
 
                 flash("Login successful!", "success")
-                return redirect(url_for("dashboard.dashboard"))
+                if(user.is_admin==False):
+                    return redirect(url_for("dashboard.dashboard"))
+                elif(user.is_admin==True) : 
+                    return redirect(url_for("admin.dashboard"))
+
 
             flash("Invalid username/email or password", "danger")
 
@@ -144,6 +148,22 @@ class ForgotPasswordView(MethodView):
             "forgot_password.html",
             form=form
         )
+    
+
+class LogoutView(MethodView):
+
+    def get(self):
+
+        session.clear()
+
+        flash(
+            "Logged out successfully.",
+            "success"
+        )
+
+        return redirect(
+            url_for("auth.login")
+        )
 
 
 # ============================================
@@ -167,5 +187,13 @@ auth_bp.add_url_rule(
     "/forgot-password",
     view_func=ForgotPasswordView.as_view(
         "forgot_password"
+    )
+)
+
+
+auth_bp.add_url_rule(
+    "/logout",
+    view_func=LogoutView.as_view(
+        "logout"
     )
 )

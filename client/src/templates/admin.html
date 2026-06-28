@@ -19,7 +19,7 @@
 
 <!-- ================= USERS ================= -->
 
-<div class="bg-white p-6 rounded-xl shadow mb-8">
+<div class="bg-white p-6 rounded-xl shadow mb-8 max-h-[680px] overflow-y-auto" id="users">
 
 
 <div class="flex justify-between items-center mb-4">
@@ -65,7 +65,7 @@
                       action="{{ url_for('admin.update_user') }}"
                       class="flex flex-wrap gap-2">
 
-                    {{ update_user_form.hidden_tag() }}
+                    {{ update_user_form.csrf_token }}
 
                     {{ update_user_form.user_id(
                         value=user.id
@@ -91,8 +91,8 @@
                 <form method="POST"
                       action="{{ url_for('admin.delete_user') }}">
 
-                    {{ delete_user_form.hidden_tag() }}
-
+                    
+                    {{ delete_user_form.csrf_token }}
                     {{ delete_user_form.user_id(
                         value=user.id
                     ) }}
@@ -155,7 +155,7 @@
 
 <!-- ================= ROOMS ================= -->
 
-<div class="bg-white p-6 rounded-xl shadow mb-8">
+<div class="bg-white p-6 rounded-xl shadow mb-8 max-h-[680px] overflow-y-auto" id="rooms">
 
 
 <div class="flex justify-between items-center mb-4">
@@ -201,7 +201,9 @@
                       action="{{ url_for('admin.update_room') }}"
                       class="flex flex-wrap gap-2">
 
-                    {{ update_room_form.hidden_tag() }}
+                    {# {{ update_room_form.hidden_tag() }} #}
+                    {{ update_room_form.csrf_token }}
+
 
                     {{ update_room_form.room_id(
                         value=room.id
@@ -232,7 +234,10 @@
                 <form method="POST"
                       action="{{ url_for('admin.delete_room') }}">
 
-                    {{ delete_room_form.hidden_tag() }}
+                    {# {{ delete_room_form.hidden_tag() }} #}
+                    {{ delete_room_form.csrf_token }}
+
+                    
 
                     {{ delete_room_form.room_id(
                         value=room.id
@@ -296,7 +301,7 @@
 
 <!-- ================= TRANSACTIONS ================= -->
 
-<div class="bg-white p-6 rounded-xl shadow">
+<div class="bg-white p-6 rounded-xl shadow max-h-[680px] overflow-y-auto" id="trans">
 
 
 <h2 class="text-xl font-bold mb-4">

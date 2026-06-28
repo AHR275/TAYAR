@@ -251,29 +251,7 @@ templates/forgot_password.html
 
 ---
 
-# Member 9 — Documentation & Video
-
-### Responsibilities
-
-* Final Report
-* Screenshots
-* Contribution Table
-* Project Video
-* PPT Preparation
-* Submission Organization
 
 ---
 
-One more thing: looking at your current structure screenshot, you still have:
 
-
-templates/forgot_passport.html
-
-
-It should be renamed to:
-
-
-templates/forgot_password.html
-
-
-before everyone starts coding, otherwise the route names and template names will become inconsistent.

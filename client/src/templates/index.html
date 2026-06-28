@@ -9,30 +9,88 @@
     <title>{% block title %}Tayar{% endblock %}</title>
 </head>
 
-<body class="bg-gray-100">
+<body class="bg-gray-100 flex flex-col min-h-screen">
 
     <!-- Navbar -->
-    <nav class="bg-blue-600 text-white p-4">
-        <div class="container mx-auto flex justify-between">
-            <h1 class="text-xl font-bold">Tayar</h1>
+    <nav class="bg-blue-600 text-white shadow-md">
+        <div class="container mx-auto flex justify-between items-center p-4">
 
-            <div class="space-x-4">
-                <a href="/">Home</a>
-                <a href="/dashboard">Dashboard</a>
-                <a href="/topup">Top Up</a>
+            <a href="/" class="text-2xl font-bold">
+                Tayar
+            </a>
+
+            <div class="flex items-center space-x-6 text-lg">
+
+                <a href="/"
+                   class="hover:text-gray-200 transition">
+                    Home
+                </a>
+
+                <a href="{{ nav_links.dashboard }}"
+                   class="hover:text-gray-200 transition">
+                    Dashboard
+                </a>
+
+                <a href="{{ nav_links.analysis }}"
+                   class="hover:text-gray-200 transition">
+                    {{ nav_links.analysis_name }}
+                </a>
+
+                <a href="/profile"
+                class="hover:text-gray-200 transition">
+            
+                    Profile
+                </a>
+
             </div>
+
         </div>
     </nav>
 
     <!-- Page Content -->
-    <main class="container mx-auto p-6">
+    <!-- Flash Messages -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+        <div class="container mx-auto mt-6">
+            {% for category, message in messages %}
+
+                {% if category == "success" %}
+                    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mb-4">
+                        {{ message }}
+                    </div>
+
+                {% elif category == "danger" %}
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                        {{ message }}
+                    </div>
+
+                {% elif category == "warning" %}
+                    <div class="bg-yellow-100 border border-yellow-400 text-yellow-700 px-4 py-3 rounded mb-4">
+                        {{ message }}
+                    </div>
+
+                {% else %}
+                    <div class="bg-blue-100 border border-blue-400 text-blue-700 px-4 py-3 rounded mb-4">
+                        {{ message }}
+                    </div>
+                {% endif %}
+
+            {% endfor %}
+        </div>
+    {% endif %}
+{% endwith %}
+    <main class="container mx-auto flex-1 p-6">
+
         {% block content %}
         {% endblock %}
+
     </main>
 
     <!-- Footer -->
     <footer class="bg-gray-800 text-white text-center p-4 mt-10">
+
         Smart Electricity Top-Up System
+
     </footer>
 
 </body>

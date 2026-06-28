@@ -4,6 +4,8 @@ from src.middleware.db import db
 from src.middleware.init_db import create_database, seed_db
 
 from src.middleware.session_manager import SessionManager
+from src.middleware.navbar import register_navbar
+
 
 from src.routes.topup import topup_bp
 from src.routes.homepage import home_bp
@@ -13,6 +15,8 @@ from src.routes.auth import auth_bp
 from src.routes.admin import admin_bp
 from src.routes.analyze_admin import analysis_admin_bp
 from src.routes.analyze_user import analysis_user_bp
+from src.routes.profile import profile_bp 
+
 # from src.routes.analyze import analyze_bp
 
 
@@ -36,6 +40,8 @@ with app.app_context():
 # def dashboard():
 #     return render_template("dashboard.html")
 
+register_navbar(app)
+
 app.register_blueprint(topup_bp)
 app.register_blueprint(auth_bp)
 
@@ -45,6 +51,7 @@ app.register_blueprint(dashboard_bp)
 app.register_blueprint(admin_bp)
 # app.register_blueprint(analysis_admin_bp)
 app.register_blueprint(analysis_user_bp)
+app.register_blueprint(profile_bp)
 
 @app.before_request  
 def before_request() :
@@ -52,12 +59,12 @@ def before_request() :
     
 
     ALLOWED_ENDPOINTS =["auth.register " , "auth.login" ,"homepage.homepage"]
-    ADMIN_ENDPOINTS= ["admin.dashboard" ]
+    ADMIN_ENDPOINTS= ["admin.dashboard"  , "admin.analyze_admin"]
     
 
     if request.endpoint not in ALLOWED_ENDPOINTS: 
         if not user : 
             return redirect(url_for("auth.login")) 
-        elif  user['is_admin']==False and request.endpoint.startswith("admin.") :
+        elif  user['is_admin']==False and request.endpoint in ADMIN_ENDPOINTS :
             return render_template("forbidden.html") 
 

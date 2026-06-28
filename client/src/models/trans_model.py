@@ -12,7 +12,7 @@ class Transaction(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'), nullable=False)
     amount = db.Column(db.Numeric(10, 2), nullable=False)
-    type = db.Column(db.Enum('topup', 'payment'), nullable=False)
+    type = db.Column(db.Enum('topup', 'payment','refund'), nullable=False)
     status = db.Column(db.String(50), default='pending')
     description = db.Column(db.Text)
     created_at = db.Column(db.DateTime, default=datetime.utcnow)
